@@ -1,0 +1,340 @@
+---
+// A run as a score, read top to bottom: one thread from your request, a loop back from the officer, the violet
+// downbeat of your approval, three worktree lanes that rejoin on the run branch. Drawn in place by default; when
+// it scrolls into view with JS on, it plays through once (see the script in src/pages/index.astro).
+const steps = [
+  { kind: 'request', title: 'Your request', text: 'One <code>/coordinate</code> line, in your own words.' },
+  { kind: 'planner', title: 'Planner', text: 'Reads the code your request touches and splits it into small tasks.' },
+  {
+    kind: 'officer',
+    title: 'Hallucination officer',
+    text: 'Checks the plan against your exact words and sends it back until it holds up.',
+  },
+  { kind: 'approve', title: 'Your one approval', text: 'You read the plan and approve it. It’s the one stop in the run.' },
+  {
+    kind: 'builders',
+    title: 'Builders, in parallel',
+    text: 'Tasks that don’t share files run at once, each in its own git worktree.',
+  },
+  {
+    kind: 'checks',
+    title: 'Reviewer, then officer',
+    text: 'Each task is reviewed, then checked again against the plan and your words.',
+  },
+  {
+    kind: 'branch',
+    title: 'Run branch and draft PR',
+    text: 'Merged into <code>coord/&lt;run&gt;</code>, gated and pushed. The draft PR is updated after every merge.',
+  },
+];
+const lanes = ['1rem', '2.75rem', '4.5rem'];
+---
+
+<section class="flow" aria-labelledby="flow-title">
+  <div class="inner">
+    <div class="head">
+      <h2 id="flow-title">How a run works</h2>
+      <a class="more" href="/docs/how-it-works/">
+        The full flow in the docs
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h11m-4-4 4 4-4 4"></path></svg>
+      </a>
+    </div>
+
+    <ol class="run" data-run>
+      {
+        steps.map((step, i) => (
+          <li class:list={['step', step.kind]} style={`--i:${i}`}>
+            <div class="rail" aria-hidden="true">
+              {step.kind === 'builders' && (
+                <svg class="fork" viewBox="0 0 88 45">
+                  <path d="M44 0C44 18 16 14 16 32V45M44 0V45M44 0C44 18 72 14 72 32V45" />
+                </svg>
+              )}
+              {step.kind === 'branch' && (
+                <svg class="fork" viewBox="0 0 88 45">
+                  <path d="M16 0C16 18 44 14 44 32V45M44 0V45M72 0C72 18 44 14 44 32" />
+                </svg>
+              )}
+
+              {step.kind === 'builders' || step.kind === 'checks'
+                ? lanes.map((x) => <span class="thread" style={`--x:${x}`} />)
+                : step.kind !== 'branch' && <span class="thread" style="--x:2.75rem" />}
+
+              {step.kind === 'officer' && (
+                <svg class="loop" viewBox="0 0 44 50">
+                  <path d="M37 44C12 44 12 6 37 6" />
+                  <path d="M33 2.5 37.5 6 33 9.5" />
+                </svg>
+              )}
+
+              {(step.kind === 'request' || step.kind === 'planner') && (
+                <svg class="node" style="--x:2.75rem" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="5.5" />
+                </svg>
+              )}
+              {step.kind === 'officer' && (
+                <svg class="node" style="--x:2.75rem" viewBox="0 0 20 20">
+                  <path d="M10 3 17 10 10 17 3 10Z" />
+                </svg>
+              )}
+              {step.kind === 'approve' && (
+                <svg class="node downbeat" style="--x:2.75rem" viewBox="0 0 20 20">
+                  <circle class="halo" cx="10" cy="10" r="9.5" />
+                  <circle class="beat" cx="10" cy="10" r="5.5" />
+                </svg>
+              )}
+              {step.kind === 'builders' &&
+                lanes.map((x) => (
+                  <svg class="node" style={`--x:${x}`} viewBox="0 0 20 20">
+                    <circle cx="10" cy="10" r="4.5" />
+                  </svg>
+                ))}
+              {step.kind === 'checks' &&
+                lanes.map((x) => (
+                  <>
+                    <svg class="node" style={`--x:${x}`} viewBox="0 0 20 20">
+                      <circle class="dot" cx="10" cy="10" r="3" />
+                    </svg>
+                    <svg class="node second" style={`--x:${x}`} viewBox="0 0 20 20">
+                      <path d="M10 4.5 15.5 10 10 15.5 4.5 10Z" />
+                    </svg>
+                  </>
+                ))}
+              {step.kind === 'branch' && (
+                <svg class="node" style="--x:2.75rem" viewBox="0 0 20 20">
+                  <circle class="ring" cx="10" cy="10" r="8.75" />
+                  <circle class="dot" cx="10" cy="10" r="5" />
+                </svg>
+              )}
+            </div>
+            <div class="text">
+              <h3>{step.title}</h3>
+              <p set:html={step.text} />
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .inner {
+    display: grid;
+    gap: 2.5rem;
+    box-sizing: border-box;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: clamp(4rem, 8vw, 7.5rem) 1.5rem;
+  }
+  h2 {
+    margin: 0 0 0.75rem;
+    font-size: var(--co-text-2xl);
+    font-weight: var(--co-weight-display);
+    line-height: var(--co-leading-heading);
+    letter-spacing: var(--co-tracking-heading);
+  }
+  .more {
+    display: inline-flex;
+    margin-inline: -0.375rem;
+    padding-inline: 0.375rem;
+    align-items: center;
+    gap: 0.375rem;
+    min-height: 2.75rem;
+    border-radius: var(--co-radius-sm);
+    color: var(--co-ink-2);
+    font-weight: var(--co-weight-medium);
+    text-decoration: none;
+    transition: color var(--co-dur-quick) var(--co-ease-arrive);
+  }
+  .more:hover {
+    color: var(--co-accent-strong);
+  }
+  .more svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--co-dur-base) var(--co-ease-arrive);
+  }
+  @media (hover: hover) {
+    .more:hover svg {
+      transform: translateX(3px);
+    }
+  }
+  .more:focus-visible svg {
+    transform: translateX(3px);
+  }
+
+  /* The score */
+  .run {
+    --rail: 5.5rem;
+    --y: 0.8125rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, 1fr);
+    gap: 1rem;
+    padding-block-end: 2rem;
+  }
+  .step:last-child {
+    padding-block-end: 0;
+  }
+  .builders,
+  .branch {
+    --y: 2.8125rem;
+  }
+  .rail {
+    position: relative;
+  }
+  .thread {
+    position: absolute;
+    inset-block: 0 -2rem;
+    left: calc(var(--x) - 0.75px);
+    width: 1.5px;
+    background: var(--co-line-strong);
+    transform-origin: top;
+  }
+  .request .thread,
+  .builders .thread {
+    top: var(--y);
+  }
+  .fork,
+  .loop {
+    position: absolute;
+    overflow: visible;
+    fill: none;
+    stroke: var(--co-line-strong);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .fork {
+    top: 0;
+    left: 0;
+    width: 5.5rem;
+    height: 2.8125rem;
+    transform-origin: top;
+  }
+  .loop {
+    top: calc(var(--y) - 2.75rem);
+    left: 0;
+    width: 2.75rem;
+    height: 3.125rem;
+    stroke: var(--co-muted);
+  }
+  .node {
+    position: absolute;
+    top: calc(var(--y) - 0.625rem);
+    left: calc(var(--x) - 0.625rem);
+    width: 1.25rem;
+    height: 1.25rem;
+    overflow: visible;
+    fill: var(--co-bg);
+    stroke: var(--co-ink);
+    stroke-width: 1.75;
+  }
+  .node.second {
+    top: calc(var(--y) + 1.125rem);
+  }
+  .node .dot {
+    fill: var(--co-ink);
+    stroke: none;
+  }
+  .node .ring {
+    stroke: var(--co-line-strong);
+    stroke-width: 1.5;
+  }
+  .downbeat .halo {
+    fill: var(--co-accent-soft);
+    stroke: none;
+  }
+  .downbeat .beat {
+    fill: var(--co-accent);
+    stroke: none;
+  }
+  .builders .text,
+  .branch .text {
+    padding-block-start: 2rem;
+  }
+  h3 {
+    margin: 0 0 0.25rem;
+    font-size: var(--co-text-md);
+    font-weight: var(--co-weight-strong);
+    line-height: 1.5rem;
+    letter-spacing: -0.01em;
+  }
+  .approve h3 {
+    color: var(--co-accent-strong);
+  }
+  .text p {
+    margin: 0;
+    max-width: 30rem;
+    color: var(--co-ink-2);
+  }
+  .text :global(code) {
+    font-family: var(--co-font-mono);
+    font-size: 0.875em;
+    color: var(--co-ink);
+  }
+
+  @media (min-width: 56rem) {
+    .inner {
+      grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+      gap: 4rem;
+    }
+    .head {
+      position: sticky;
+      top: 6rem;
+      align-self: start;
+    }
+  }
+
+  /* Playing through: hidden only once the script has marked it pending, then each row lands on the beat. */
+  .run[data-run='pending'] :is(.thread, .fork) {
+    transform: scaleY(0);
+  }
+  .run[data-run='pending'] .node {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  .run[data-run='pending'] .loop {
+    opacity: 0;
+    transform: translateX(6px);
+  }
+  .run[data-run='pending'] .text {
+    opacity: 0;
+    transform: translateY(var(--co-rise));
+  }
+  .run[data-run='play'] .step {
+    --t: calc(var(--i) * var(--co-stagger) * 3);
+  }
+  .run[data-run='play'] :is(.thread, .fork, .node, .loop, .text) {
+    transition:
+      opacity var(--co-dur-reveal) var(--co-ease-arrive),
+      transform var(--co-dur-reveal) var(--co-ease-arrive);
+    transition-delay: var(--t);
+  }
+  .run[data-run='play'] :is(.builders, .branch) :is(.node, .thread),
+  .run[data-run='play'] .text {
+    transition-delay: calc(var(--t) + var(--co-stagger));
+  }
+  .run[data-run='play'] .node.second {
+    transition-delay: calc(var(--t) + var(--co-stagger) * 2);
+  }
+  .run[data-run='play'] .loop {
+    transition-delay: calc(var(--t) + var(--co-stagger) * 4);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .run[data-run='pending'] :is(.thread, .fork, .node, .loop, .text) {
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,56 @@
+---
+// Shared by the home page (Base.astro) and every docs page (DocsFooter.astro).
+---
+
+<footer class="co-site-footer">
+  <a class="credit" href="https://github.com/Kodexa-software">
+    <img src="/brand/kodexa.svg" alt="" width="17" height="20" />
+    <span>Coordinator is a Kodexa project</span>
+  </a>
+  <nav aria-label="Footer">
+    <a href="/docs/">Docs</a>
+    <a href="https://github.com/Kodexa-software/Coordinator/blob/main/LICENSE">MIT licence</a>
+    <a href="https://github.com/Kodexa-software/Coordinator">GitHub</a>
+  </nav>
+</footer>
+
+<style>
+  .co-site-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin-block-start: 3rem;
+    padding-block: 1.5rem;
+    border-block-start: 1px solid var(--co-line);
+    color: var(--co-muted);
+    font-family: var(--co-font-sans);
+    font-size: var(--co-text-sm);
+    line-height: 1.4;
+  }
+  a {
+    color: var(--co-ink-2);
+    text-decoration: none;
+    border-radius: var(--co-radius-sm);
+    transition: color var(--co-dur-quick) var(--co-ease-arrive);
+  }
+  a:hover {
+    color: var(--co-ink);
+  }
+  .credit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+  .credit img {
+    display: block;
+    height: 1.25rem;
+    width: auto;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+</style>

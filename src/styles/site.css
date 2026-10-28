@@ -1,0 +1,205 @@
+/* Site-wide styles: T1's tokens, the browser surfaces, page transitions, and the tokens mapped onto Starlight.
+   Loaded by Starlight (customCss) and by src/components/site/Base.astro. */
+@import './tokens.css';
+
+/* Browser surfaces */
+::selection {
+  background: var(--co-accent-soft);
+  color: var(--co-ink);
+}
+:root {
+  caret-color: var(--co-accent);
+  scrollbar-color: var(--co-line-strong) transparent;
+  accent-color: var(--co-accent);
+}
+:focus-visible {
+  outline: 2px solid transparent;
+  box-shadow: var(--co-focus-ring);
+}
+a {
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+table {
+  font-variant-numeric: tabular-nums;
+}
+:is(h1, h2, h3, h4) {
+  text-wrap: balance;
+}
+p,
+li {
+  text-wrap: pretty;
+}
+
+/* Page transitions: the old page leaves quickly, the new one sharpens in while rising.
+   The header (and the docs sidebar) keep their own group, so they hold still between pages. */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-group(*) {
+  animation-duration: var(--co-dur-page);
+  animation-timing-function: var(--co-ease-move);
+}
+::view-transition-old(root) {
+  animation: co-page-leave var(--co-dur-quick) var(--co-ease-leave) both;
+}
+::view-transition-new(root) {
+  animation: co-page-arrive var(--co-dur-page) var(--co-ease-arrive) both;
+}
+@keyframes co-page-leave {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes co-page-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(var(--co-rise));
+    filter: blur(var(--co-reveal-blur));
+  }
+}
+@keyframes co-page-fade {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*) {
+    animation-duration: 0s;
+  }
+  ::view-transition-new(root) {
+    animation-name: co-page-fade;
+  }
+}
+
+/* Starlight, in the brand. Grays map by role, so light and dark come from the tokens' light-dark(). */
+:root,
+::backdrop,
+:root[data-theme='light'],
+[data-theme='light'] ::backdrop {
+  --sl-font: var(--co-font-sans);
+  --sl-font-mono: var(--co-font-mono);
+  --sl-line-height: var(--co-leading-body);
+  --sl-line-height-headings: var(--co-leading-heading);
+  --sl-content-width: var(--co-measure);
+  --sl-text-h1: var(--co-text-2xl);
+  --sl-text-h2: var(--co-text-xl);
+  --sl-text-h3: var(--co-text-lg);
+  --sl-text-h4: var(--co-text-md);
+  --sl-text-h5: var(--co-text-base);
+
+  --sl-color-white: var(--co-ink);
+  --sl-color-gray-1: var(--co-ink);
+  --sl-color-gray-2: var(--co-ink-2);
+  --sl-color-gray-3: var(--co-muted);
+  --sl-color-gray-4: var(--co-line-strong);
+  --sl-color-gray-5: var(--co-line);
+  --sl-color-gray-6: var(--co-sunken);
+  --sl-color-gray-7: var(--co-sunken);
+  --sl-color-black: var(--co-bg);
+
+  --sl-color-accent-low: var(--co-accent-soft);
+  --sl-color-accent: var(--co-accent);
+  --sl-color-accent-high: var(--co-accent-strong);
+
+  --sl-color-text: var(--co-ink);
+  --sl-color-text-accent: var(--co-accent);
+  --sl-color-text-invert: var(--co-on-accent);
+  --sl-color-bg: var(--co-bg);
+  --sl-color-bg-nav: var(--co-bg);
+  --sl-color-bg-sidebar: var(--co-bg);
+  --sl-color-bg-inline-code: var(--co-sunken);
+  --sl-color-bg-accent: var(--co-accent);
+  --sl-color-hairline-light: var(--co-line);
+  --sl-color-hairline: var(--co-line);
+  --sl-color-hairline-shade: var(--co-line);
+  --sl-color-backdrop-overlay: color-mix(in srgb, var(--co-sunken) 72%, transparent);
+
+  --sl-shadow-sm: var(--co-shadow-1);
+  --sl-shadow-md: var(--co-shadow-1);
+  --sl-shadow-lg: var(--co-shadow-2);
+
+  /* Asides: note, tip, caution, danger */
+  --sl-color-blue-low: var(--co-info-soft);
+  --sl-color-blue: var(--co-info);
+  --sl-color-blue-high: var(--co-info);
+  --sl-color-purple-low: var(--co-accent-soft);
+  --sl-color-purple: var(--co-accent);
+  --sl-color-purple-high: var(--co-accent-strong);
+  --sl-color-orange-low: var(--co-warn-soft);
+  --sl-color-orange: var(--co-warn);
+  --sl-color-orange-high: var(--co-warn);
+  --sl-color-red-low: var(--co-bad-soft);
+  --sl-color-red: var(--co-bad);
+  --sl-color-red-high: var(--co-bad);
+  --sl-color-green-low: var(--co-ok-soft);
+  --sl-color-green: var(--co-ok);
+  --sl-color-green-high: var(--co-ok);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Docs frame: the header and sidebar hold still between pages. */
+.page > .header {
+  view-transition-name: co-header;
+}
+@media (min-width: 50rem) {
+  .sidebar-pane {
+    view-transition-name: co-sidebar;
+  }
+}
+
+/* Headings by size and weight */
+.content-panel h1#_top {
+  font-weight: var(--co-weight-display);
+  letter-spacing: var(--co-tracking-display);
+  line-height: var(--co-leading-heading);
+}
+.sl-markdown-content :is(h2, h3, h4, h5, h6) {
+  font-weight: var(--co-weight-strong);
+  letter-spacing: var(--co-tracking-heading);
+}
+
+/* Links in the reading column: violet marks what you can act on */
+.sl-markdown-content a:not(:where(.not-content *)) {
+  transition: color var(--co-dur-quick) var(--co-ease-arrive);
+}
+.sl-markdown-content a:not(:where(.not-content *)):hover {
+  color: var(--co-accent-strong);
+}
+
+/* Inline code (code blocks: expressiveCode in astro.config.mjs) */
+.sl-markdown-content code:not(:where(.not-content *)) {
+  border: 1px solid var(--co-line);
+  border-radius: var(--co-radius-sm);
+}
+
+/* Asides: a soft surface with a hairline, no heavy side stripe */
+.starlight-aside {
+  border: 1px solid color-mix(in srgb, var(--sl-color-asides-border) 35%, transparent);
+  border-radius: var(--co-radius-md);
+}
+
+/* Header icons stay quiet; violet is kept for the current page */
+.social-icons a {
+  color: var(--co-ink-2);
+  transition: color var(--co-dur-quick) var(--co-ease-arrive);
+}
+.social-icons a:hover {
+  color: var(--co-ink);
+}
+
+/* Sidebar: the current page in the soft violet */
+.sidebar-content a {
+  transition:
+    color var(--co-dur-quick) var(--co-ease-arrive),
+    background-color var(--co-dur-quick) var(--co-ease-arrive);
+}
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:hover,
+.sidebar-content a[aria-current='page']:focus {
+  color: var(--co-accent-strong);
+  background-color: var(--co-accent-soft);
+}

@@ -1,6 +1,14 @@
 .DS_Store
 .wrangler/
 node_modules/
+dist/
+.astro/
+.cache/
+
+# Written by scripts/sync-coordinator.mjs from the Coordinator repo
+src/generated/
+public/coordinator.json
+src/content/docs/docs/changelog.md
 
 # Coordinator's local knowledge
 /.coordinator/

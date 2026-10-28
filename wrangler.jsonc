@@ -1,9 +1,10 @@
-// The site in public/, served as static assets with no Worker code.
-// Deploy: CLOUDFLARE_ACCOUNT_ID=<account> npx wrangler deploy
+// The Astro build in dist/ (`npm run build`), served as static assets with no Worker code.
+// Deploy: npm run build && CLOUDFLARE_ACCOUNT_ID=<account> npx wrangler deploy
 {
   "name": "coordinator",
   "compatibility_date": "2026-10-01",
   "assets": {
-    "directory": "./public"
+    "directory": "./dist",
+    "not_found_handling": "404-page"
   }
 }

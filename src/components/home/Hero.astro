@@ -1,0 +1,257 @@
+---
+// The promise, the install one-liner and the way on. The art is T1's mark seated in its hall: the rows settle
+// into their places, outer first, then the violet centre, then the text rises in. This is the page's one entrance.
+import info from '../../generated/coordinator.json';
+import GitHubIcon from '../site/GitHubIcon.astro';
+import CopyCommand from './CopyCommand.astro';
+import { INSTALL } from './commands';
+
+const halls = [40, 55, 70, 85].map((r) => {
+  const dx = (r * Math.SQRT1_2).toFixed(2);
+  const x = (36.25 + Number(dx)).toFixed(2);
+  return `M${x} ${(32 - Number(dx)).toFixed(2)}A${r} ${r} 0 1 0 ${x} ${(32 + Number(dx)).toFixed(2)}`;
+});
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="inner">
+    <svg class="art" viewBox="-54 -58 154 180" aria-hidden="true" focusable="false">
+      <g class="halls">
+        {halls.map((d, i) => <path class="hall" style={`--n:${i}`} d={d} />)}
+      </g>
+      <g class="rows">
+        <path class="row" style="--n:0" d="M54.28 13.97A25.5 25.5 0 1 0 54.28 50.03"></path>
+        <path class="row" style="--n:1" d="M47.21 21.04A15.5 15.5 0 1 0 47.21 42.96"></path>
+        <path class="row centre" style="--n:2" d="M40.14 28.11A5.5 5.5 0 1 0 40.14 35.89"></path>
+      </g>
+    </svg>
+
+    <div class="words">
+      <h1 id="hero-title" class="enter" style="--n:0">
+        One request in. <span>A planned, audited, reviewed branch out.</span>
+      </h1>
+      <p class="lede enter" style="--n:1">
+        Coordinator turns a single <code>/coordinate</code> request into a small team of Claude Code agents that work
+        in the background while you do something else.
+      </p>
+      <div class="install enter" style="--n:2">
+        <CopyCommand command={INSTALL} label="the install command" />
+        <p class="then">Then type <code>/coordinate</code> in a new Claude Code session.</p>
+      </div>
+      <div class="links enter" style="--n:3">
+        <a class="docs" href="/docs/">
+          Read the docs
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 10h11m-4-4 4 4-4 4"></path></svg>
+        </a>
+        <a class="quiet" href="https://github.com/Kodexa-software/Coordinator">
+          <GitHubIcon />
+          GitHub
+        </a>
+        <a class="quiet version" href="/docs/changelog/">Version {info.version}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    overflow: clip;
+  }
+  .inner {
+    position: relative;
+    display: grid;
+    gap: 2rem;
+    box-sizing: border-box;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: clamp(2.5rem, 6vw, 7rem) 1.5rem clamp(4rem, 8vw, 8rem);
+  }
+
+  /* The art */
+  .art {
+    width: auto;
+    height: 9rem;
+    overflow: visible;
+  }
+  .hall {
+    fill: none;
+    stroke: var(--co-line-strong);
+    stroke-width: 0.5;
+  }
+  .row {
+    fill: none;
+    stroke: var(--co-ink);
+    stroke-width: 7;
+  }
+  .centre {
+    stroke: var(--co-accent);
+  }
+  .hall,
+  .row {
+    transform-box: view-box;
+    transform-origin: 36.25px 32px;
+  }
+
+  /* The copy */
+  .words {
+    display: grid;
+    gap: 1.5rem;
+    min-width: 0;
+  }
+  h1 {
+    margin: 0;
+    max-width: 13ch;
+    font-size: clamp(2.5rem, 1.2rem + 4.2vw, 4.75rem);
+    font-weight: var(--co-weight-display);
+    line-height: var(--co-leading-display);
+    letter-spacing: var(--co-tracking-display);
+  }
+  h1 span {
+    display: block;
+    color: var(--co-ink-2);
+  }
+  .lede {
+    margin: 0;
+    max-width: 34rem;
+    color: var(--co-ink-2);
+    font-size: var(--co-text-md);
+  }
+  .lede code,
+  .then code {
+    font-family: var(--co-font-mono);
+    font-size: 0.9em;
+    color: var(--co-ink);
+  }
+  .install {
+    display: grid;
+    gap: 0.625rem;
+    max-width: 40rem;
+    margin-block-start: 0.5rem;
+  }
+  .then {
+    margin: 0;
+    color: var(--co-muted);
+    font-size: var(--co-text-sm);
+  }
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+  }
+  .links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    border-radius: var(--co-radius-sm);
+    font-weight: var(--co-weight-medium);
+    text-decoration: none;
+    transition:
+      color var(--co-dur-quick) var(--co-ease-arrive),
+      background-color var(--co-dur-quick) var(--co-ease-arrive),
+      border-color var(--co-dur-quick) var(--co-ease-arrive);
+  }
+  .docs {
+    padding-inline: 1.125rem 0.875rem;
+    border: 1px solid var(--co-line-strong);
+    color: var(--co-ink);
+    background: var(--co-surface);
+    box-shadow: var(--co-shadow-1);
+  }
+  .docs:hover {
+    border-color: var(--co-muted);
+  }
+  .docs svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--co-dur-base) var(--co-ease-arrive);
+  }
+  @media (hover: hover) {
+    .docs:hover svg {
+      transform: translateX(3px);
+    }
+  }
+  .docs:focus-visible svg {
+    transform: translateX(3px);
+  }
+  .quiet {
+    padding-inline: 0.5rem;
+    color: var(--co-ink-2);
+  }
+  .quiet:hover {
+    color: var(--co-ink);
+  }
+  .version {
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--co-weight-body);
+  }
+
+  @media (min-width: 60rem) {
+    .inner {
+      grid-template-columns: minmax(0, 1fr) 24rem;
+      align-items: center;
+      gap: 3rem;
+    }
+    .words {
+      grid-row: 1;
+      grid-column: 1;
+    }
+    .art {
+      grid-row: 1;
+      grid-column: 2;
+      justify-self: start;
+      height: 32rem;
+    }
+  }
+
+  /* The entrance: the hall settles, the rows settle in outer first, the violet centre lands, the text rises. */
+  @media (prefers-reduced-motion: no-preference) {
+    .hall {
+      animation: co-hero-settle var(--co-dur-sequence) var(--co-ease-arrive) both;
+      animation-delay: calc(240ms + var(--n) * var(--co-stagger));
+    }
+    .row {
+      animation: co-hero-seat var(--co-dur-sequence) var(--co-ease-arrive) both;
+      animation-delay: calc(var(--n) * var(--co-stagger) * 2);
+    }
+    .enter {
+      animation: co-hero-rise var(--co-dur-reveal) var(--co-ease-arrive) both;
+      animation-delay: calc(380ms + var(--n) * var(--co-stagger));
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .row,
+    .enter {
+      animation: co-hero-fade var(--co-dur-reveal) var(--co-ease-arrive) both;
+    }
+  }
+  @keyframes co-hero-seat {
+    from {
+      opacity: 0;
+      transform: scale(0.82);
+    }
+  }
+  @keyframes co-hero-settle {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+  }
+  @keyframes co-hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(calc(var(--co-rise) * 1.5));
+    }
+  }
+  @keyframes co-hero-fade {
+    from {
+      opacity: 0;
+    }
+  }
+</style>

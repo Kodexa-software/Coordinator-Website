@@ -1,0 +1,105 @@
+---
+// Layout for pages outside Starlight (the home page): head, header, main, footer.
+import '../../styles/site.css';
+import SiteFooter from './SiteFooter.astro';
+import SiteHeader from './SiteHeader.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Coordinator · Conduct a team of Claude Code agents',
+  description = 'Coordinator plans the work, has a hallucination officer check it against your exact words, and builds it in parallel in the background. A Claude Code plugin.',
+} = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const image = new URL('/brand/logo.svg', Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/brand/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#fafafd" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d0c13" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Coordinator" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary" />
+    <link
+      rel="preload"
+      href="/brand/fonts/plus-jakarta-sans-latin-wght.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin=""
+    />
+    <link rel="stylesheet" href="/brand/fonts/fonts.css" />
+    {/* Follow the theme picked in the docs (Starlight stores it), before first paint. */}
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('starlight-theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch {}
+    </script>
+  </head>
+  <body class="co-page">
+    <a class="co-skip" href="#main">Skip to content</a>
+    <SiteHeader />
+    <main id="main">
+      <slot />
+    </main>
+    <div class="co-page-footer">
+      <SiteFooter />
+    </div>
+  </body>
+</html>
+
+<style>
+  .co-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    margin: 0;
+    background: var(--co-bg);
+    color: var(--co-ink);
+    font-family: var(--co-font-sans);
+    font-size: var(--co-text-base);
+    line-height: var(--co-leading-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  main {
+    flex: 1;
+  }
+  .co-page-footer {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    box-sizing: border-box;
+  }
+  .co-skip {
+    position: absolute;
+    inset-inline-start: 1rem;
+    inset-block-start: 1rem;
+    z-index: 10;
+    padding: 0.5rem 1rem;
+    border-radius: var(--co-radius-sm);
+    background: var(--co-accent);
+    color: var(--co-on-accent);
+    font-weight: var(--co-weight-medium);
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+  .co-skip:focus-visible {
+    transform: none;
+  }
+</style>

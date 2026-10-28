@@ -1,0 +1,96 @@
+---
+// How it works for you: four lines from the README's guard rails. Always on the nocturnal ground: the band sets
+// color-scheme: dark, so the tokens' light-dark() pairs resolve to their dark values inside it.
+const lines = [
+  { title: 'Your words are the spec.', text: 'Every request, addition and answer is kept word for word.' },
+  {
+    title: 'Your project’s rules come first.',
+    text: 'Every agent loads your <code>CLAUDE.md</code>, <code>AGENTS.md</code> and <code>.claude/rules</code>.',
+  },
+  { title: 'No tests unless you ask.', text: 'A hook keeps builders out of test files.' },
+  {
+    title: 'Nothing lands on your base branch.',
+    text: 'Merging is yours.',
+  },
+];
+---
+
+<section class="philosophy" aria-labelledby="philosophy-title">
+  <div class="inner">
+    <h2 id="philosophy-title" data-reveal="fade">How it works for you</h2>
+    <ul>
+      {
+        lines.map((line, i) => (
+          <li data-reveal="slide" style={`--i:${i}`}>
+            <h3>{line.title}</h3>
+            <p set:html={line.text} />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .philosophy {
+    color-scheme: dark;
+    background: var(--co-sunken);
+    color: var(--co-ink);
+    border-block: 1px solid var(--co-line);
+  }
+  .philosophy ::selection {
+    background: var(--co-accent-soft);
+    color: var(--co-ink);
+  }
+  .inner {
+    box-sizing: border-box;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: clamp(4rem, 9vw, 8rem) 1.5rem;
+  }
+  h2 {
+    margin: 0 0 2.5rem;
+    color: var(--co-ink-2);
+    font-size: var(--co-text-lg);
+    font-weight: var(--co-weight-medium);
+    line-height: var(--co-leading-heading);
+  }
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    display: grid;
+    gap: 0.5rem 3rem;
+    padding-block: 1.5rem;
+    border-block-start: 1px solid var(--co-line);
+  }
+  li:last-child {
+    border-block-end: 1px solid var(--co-line);
+  }
+  h3 {
+    margin: 0;
+    font-size: var(--co-text-2xl);
+    font-weight: var(--co-weight-display);
+    line-height: var(--co-leading-heading);
+    letter-spacing: var(--co-tracking-heading);
+  }
+  p {
+    margin: 0;
+    max-width: 30rem;
+    color: var(--co-ink-2);
+  }
+  p :global(code) {
+    font-family: var(--co-font-mono);
+    font-size: 0.875em;
+    color: var(--co-ink);
+  }
+  @media (min-width: 56rem) {
+    li {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      align-items: baseline;
+      padding-block: 2rem;
+    }
+  }
+</style>
