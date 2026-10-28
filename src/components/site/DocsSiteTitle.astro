@@ -1,0 +1,22 @@
+---
+// Starlight's SiteTitle with T1's logo inlined, so it follows the theme picker.
+import Logo from './Logo.astro';
+
+const { siteTitleHref } = Astro.locals.starlightRoute;
+---
+
+<a href={siteTitleHref} class="site-title">
+  <Logo class="site-title-logo" />
+</a>
+
+<style>
+  .site-title {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    border-radius: var(--co-radius-sm);
+  }
+  .site-title :global(.site-title-logo) {
+    height: 1.75rem;
+  }
+</style>

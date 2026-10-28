@@ -1,0 +1,37 @@
+---
+// T1's logo, inlined so its colours follow the page's theme tokens. Its own <style> and title id are dropped,
+// so its class names don't style the rest of the page and the logo can appear more than once.
+import raw from '../../../public/brand/logo.svg?raw';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const logo = raw
+  .replace(/<style>[\s\S]*?<\/style>\s*/, '')
+  .replace(/<title[^>]*>[\s\S]*?<\/title>\s*/, '')
+  .replace(/aria-labelledby="[^"]*"/, 'aria-label="Coordinator"');
+---
+
+<span class:list={['co-logo', className]} set:html={logo} />
+
+<style>
+  .co-logo {
+    display: inline-flex;
+    line-height: 0;
+  }
+  .co-logo :global(svg) {
+    height: 100%;
+    width: auto;
+  }
+  .co-logo :global(.co-ink) {
+    stroke: var(--co-ink);
+  }
+  .co-logo :global(.co-accent) {
+    stroke: var(--co-accent);
+  }
+  .co-logo :global(.co-word) {
+    fill: var(--co-ink);
+  }
+</style>
