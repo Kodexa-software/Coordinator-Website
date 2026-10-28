@@ -22,7 +22,7 @@ sidebar:
    becomes a small fix task. The draft pull request shows your request, the plan and every task.
 
 Merging into your base branch is yours. When you're done reviewing, approve merge all on the live page or in chat:
-the pull requests merge in order, then every run ends. Branches and knowledge are kept.
+the pull requests merge in order, then every run ends. The branches with the pull requests are kept; each run's folder in `.coordinator/` is removed.
 
 ## The roles
 

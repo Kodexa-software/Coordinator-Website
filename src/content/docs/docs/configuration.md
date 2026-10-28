@@ -29,11 +29,11 @@ run if you haven't.
 | What | Where | After `terminate` |
 |---|---|---|
 | Project settings | `<project>/.coordinator/config.json` | kept |
-| The run's knowledge: `plan.md`, `tasks.json`, and per task `knowledge.md`, `changes.md`, `review.md`, officer reports | `<project>/.coordinator/<run>/` | kept, so a later run can continue |
-| Screenshots and other artifacts | `<project>/.coordinator/<run>/tasks/<id>/` | kept; removed with `--purge` |
+| The run's knowledge: `plan.md`, `tasks.json`, and per task `knowledge.md`, `changes.md`, `review.md`, officer reports | `<project>/.coordinator/<run>/` | removed; kept only when terminate saved unfinished work as `wip.patch` |
+| Screenshots and other artifacts | `<project>/.coordinator/<run>/tasks/<id>/` | removed with the run's folder |
 | Processes, logs, worktrees | `~/.coordinator/runs/<run>/` | removed |
 | Run branch | `coord/<run>`, pushed after every merged task, with a draft PR | kept |
-| Task branches | `coord-tasks/<run>/<task>` | removed |
+| Task branches | `coord-tasks/<run>/<task>` | removed as soon as each task is merged; any left (for example skipped tasks) are removed |
 
 `.coordinator/` is added to the project's `.gitignore` (unless `"gitignore": false`) and its local `.git/info/exclude`,
 so it is never committed by accident.
