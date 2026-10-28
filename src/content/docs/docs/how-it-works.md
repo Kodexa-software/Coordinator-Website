@@ -21,6 +21,9 @@ sidebar:
    code. The scheduler commits, merges into the run branch, runs your gate and pushes. A conflict or a failing gate
    becomes a small fix task. The draft pull request shows your request, the plan and every task.
 
+Merging into your base branch is yours. When you're done reviewing, approve merge all on the live page or in chat:
+the pull requests merge in order, then every run ends. Branches and knowledge are kept.
+
 ## The roles
 
 | Role | Does |
@@ -31,9 +34,11 @@ sidebar:
 | Reviewer | Reviews one task's change with fresh eyes |
 | Screenshot taker | Takes before/after screenshots on request |
 | Mapper | Builds or refreshes the project map |
+| Briefer | Reads big content on a smaller model and writes a short brief, with citations, for the agent that asked |
 | Scheduler | Plain code, not an agent: schedules, commits, merges, runs the gate, pushes |
 
-Each agent runs as its own background Claude Code session, except the reviewer, which its builder starts.
+Each agent runs as its own background Claude Code session, except the reviewer and the briefer,
+which the agent that needs them starts.
 
 ## The live page
 
@@ -44,6 +49,9 @@ questions there too. It runs on `127.0.0.1` only and costs nothing to keep open.
 Read each agent's conversation live, and open any file or image in a viewer. The plan shows its short version (the
 goal, the tasks, each question with its default), and you approve it with an answer per question. Everything
 waiting on you is in one list at the top.
+
+With several pull requests, the header lists them all. When every run has finished, the page asks to merge all with
+one Approve, shows each merge as it goes, and offers Try again if one fails.
 
 ## Design languages
 

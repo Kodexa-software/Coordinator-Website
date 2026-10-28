@@ -15,7 +15,7 @@ run if you haven't.
 | `setup` | `""` | What a fresh worktree needs first, for example linking dependencies from `$COORD_MAIN` |
 | `dev` | `{"command": "", "cwd": ".", "ready_path": "/"}` | Dev server for screenshots; `{port}` is replaced with a free port |
 | `max_parallel` | `3` | Builders at once |
-| `models` / `efforts` | Opus, high | Per role: `planner`, `builder`, `reviewer`, `officer`, `shooter`. The planner can set them per task |
+| `models` / `efforts` | Opus, high | Per role: `planner`, `builder`, `reviewer`, `officer`, `shooter`, `mapper`, `briefer` (Sonnet, low). The planner can set them per task |
 | `officer` | `{"plan": true, "tasks": true, "max_rounds": 3}` | Where the officer checks, and how many rounds before it asks you |
 | `permission_mode` | `"auto"` | Permission mode for background agents |
 | `deny` | push, commit, rebase, `reset --hard`, `gh pr`, publish, `sudo`, ... | Commands agents may never run |
