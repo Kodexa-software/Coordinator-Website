@@ -1,0 +1,66 @@
+---
+import Base from '../components/site/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import Lifecycle from '../components/home/Lifecycle.astro';
+import Philosophy from '../components/home/Philosophy.astro';
+import RunFlow from '../components/home/RunFlow.astro';
+import Why from '../components/home/Why.astro';
+---
+
+<Base>
+  <Hero />
+  <RunFlow />
+  <Why />
+  <Philosophy />
+  <Lifecycle />
+</Base>
+
+<script>
+  // Everything is visible by default. Only what is still below the fold is held back, then revealed as it
+  // scrolls in, so nothing on screen ever blinks out and the page reads fine without JS.
+  const below = (el: Element) => el.getBoundingClientRect().top > innerHeight;
+  const io = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const el = entry.target as HTMLElement;
+        if (el.hasAttribute('data-run')) el.dataset.run = 'play';
+        else el.dataset.state = 'in';
+        io.unobserve(el);
+      }
+    },
+    { rootMargin: '0px 0px -12% 0px' },
+  );
+  // Keyboard focus never lands on something still hidden.
+  addEventListener('focusin', (event) => {
+    const el = (event.target as Element).closest<HTMLElement>('[data-state="pending"], [data-run="pending"]');
+    if (!el) return;
+    if (el.hasAttribute('data-run')) el.dataset.run = 'play';
+    else el.dataset.state = 'in';
+    io.unobserve(el);
+  });
+  for (const el of document.querySelectorAll<HTMLElement>('[data-reveal], [data-run]')) {
+    if (!below(el)) continue;
+    if (el.hasAttribute('data-run')) el.dataset.run = 'pending';
+    else el.dataset.state = 'pending';
+    io.observe(el);
+  }
+</script>
+
+<style is:global>
+  [data-reveal][data-state] {
+    transition:
+      opacity var(--co-dur-page) var(--co-ease-arrive),
+      transform var(--co-dur-page) var(--co-ease-arrive);
+    transition-delay: calc(var(--i, 0) * var(--co-stagger));
+  }
+  [data-reveal][data-state='pending'] {
+    opacity: 0;
+  }
+  [data-reveal='rise'][data-state='pending'] {
+    transform: translateY(calc(var(--co-rise) * 2));
+  }
+  [data-reveal='slide'][data-state='pending'] {
+    transform: translateX(calc(var(--co-rise) * -2));
+  }
+</style>
