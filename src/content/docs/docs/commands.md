@@ -30,8 +30,7 @@ The live page opens and Coordinator tells you when the plan is ready. After that
 | `/coordinate list` | The coordinators in this project |
 | `/coordinate update` | Update Coordinator to the latest version |
 | `/coordinate merge` | Squash-merge every pull request of the run and its follow-up runs, then end them all. Only on the first run, once every run has finished |
-| `/coordinate terminate` | End the run: stop every process, remove worktrees and internal files, keep the branch and the knowledge |
-| `/coordinate terminate --purge` | The same, and also delete the run's knowledge folder |
+| `/coordinate terminate` | End the run: stop every process, remove worktrees, and delete the run's folder in `.coordinator/`. The branch with the PR is kept. If unfinished work is saved as `wip.patch`, the folder is kept and terminate says so |
 | `coord map [areas]` | Build or refresh the [project map](/docs/how-it-works/#the-project-map) in `.coordinator/map/` (terminal) |
 
 Add `--run <name>` when the project has more than one coordinator.
