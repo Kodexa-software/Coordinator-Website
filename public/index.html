@@ -225,7 +225,7 @@ footer .small{width:100%;font-size:13px;color:#857d6b;margin-top:6px}
 <header class="hero" id="top">
   <div class="wrap">
     <div>
-      <div class="eyebrow eb"><span>A Claude Code plugin</span><span>open source</span><span>v0.3</span></div>
+      <div class="eyebrow eb"><span>A Claude Code plugin</span><span>open source</span><span>v0.4</span></div>
       <h1>Conduct a team of agents from <em>one request.</em></h1>
       <p class="lead">Coordinator plans the work, has a hallucination officer check the plan against your exact words, then builds it in parallel. Each task runs in its own worktree and is reviewed and checked again before it merges. All of it happens in the background. You approve once.</p>
       <div class="cta">
@@ -421,21 +421,20 @@ footer .small{width:100%;font-size:13px;color:#857d6b;margin-top:6px}
     <div class="head">
       <div class="eyebrow">Install</div>
       <hr class="rule">
-      <h2>Two lines, then one request.</h2>
+      <h2>One line, then one request.</h2>
     </div>
     <div class="install">
       <div class="code">
-        <div class="top"><span>As a Claude Code plugin</span><button data-copy="p1">Copy</button></div>
-<pre id="p1">/plugin marketplace add Kodexa-software/Coordinator
-/plugin install coordinator@coordinator</pre>
+        <div class="top"><span>Install</span><button data-copy="p1">Copy</button></div>
+<pre id="p1">git clone https://github.com/Kodexa-software/Coordinator.git ~/.coordinator/app &amp;&amp; ~/.coordinator/app/install.sh</pre>
       </div>
       <div class="code">
-        <div class="top"><span>From source</span><button data-copy="p2">Copy</button></div>
-<pre id="p2">git clone https://github.com/Kodexa-software/Coordinator.git
-cd Coordinator &amp;&amp; ./install.sh</pre>
+        <div class="top"><span>Then, in Claude Code</span><button data-copy="p2">Copy</button></div>
+<pre id="p2">/coordinate &lt;your request&gt;
+/coordinate update</pre>
       </div>
     </div>
-    <p class="reqs">Needs a recent Claude Code CLI, Python 3.9+ and git, plus the GitHub CLI for the live pull request. Before/after screenshots also need Node.js; Playwright is fetched on first use.</p>
+    <p class="reqs">Start a new Claude Code session after installing. <code style="font-family:var(--mono)">/coordinate update</code> pulls the latest version. Needs a recent Claude Code CLI, Python 3.9+ and git, plus the GitHub CLI for the live pull request; before/after screenshots also need Node.js. Prefer a plugin? <code style="font-family:var(--mono)">/plugin marketplace add Kodexa-software/Coordinator</code>, then <code style="font-family:var(--mono)">/plugin install coordinator@coordinator</code>; it lists as <code style="font-family:var(--mono)">/coordinator:coordinate</code>.</p>
 
     <div class="cmds">
       <div class="cmd"><code>/coordinate &lt;request&gt;</code><span>start a run</span></div>
@@ -451,6 +450,7 @@ cd Coordinator &amp;&amp; ./install.sh</pre>
       <div class="cmd"><code>run</code><span>build a saved plan</span></div>
       <div class="cmd"><code>map</code><span>map the project for planners</span></div>
       <div class="cmd"><code>terminate</code><span>end the run and clean up</span></div>
+      <div class="cmd"><code>update</code><span>get the latest Coordinator</span></div>
     </div>
   </div>
 </section>
@@ -463,7 +463,7 @@ cd Coordinator &amp;&amp; ./install.sh</pre>
       <a href="https://github.com/Kodexa-software/Coordinator/blob/main/CHANGELOG.md">Changelog</a>
       <a href="https://github.com/Kodexa-software/Coordinator/issues">Issues</a>
     </div>
-    <div class="small">Coordinator 0.3.0 · MIT licensed · Built by <a href="https://github.com/Kodexa-software">Kodexa</a></div>
+    <div class="small">Coordinator 0.4.1 · MIT licensed · Built by <a href="https://github.com/Kodexa-software">Kodexa</a></div>
   </div>
 </footer>
 
