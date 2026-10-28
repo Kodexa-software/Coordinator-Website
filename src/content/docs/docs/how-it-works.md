@@ -13,13 +13,13 @@ sidebar:
    missed requirements, oversized answers, padded tasks and needlessly serial steps. It sends the plan back until
    it holds up; after three rounds, it asks you.
 3. **Approve.** You approve the plan on the live page or in chat, or say what to change. This is the one stop in
-   the run.
+   the run. Asks that belong to another repo become follow-up runs, started in that repo when you approve. The
+   draft pull request opens then too, with a status line and a task table updated as tasks change.
 4. **Build in parallel.** Tasks that don't depend on each other and don't share files run at the same time, each in
    its own worktree. Each builder runs its own reviewer and fixes what it finds.
 5. **Audit and merge.** The officer checks each finished task against the plan and your words, without reading the
    code. The scheduler commits, merges into the run branch, runs your gate and pushes. A conflict or a failing gate
-   becomes a small fix task. A draft pull request shows your request, the plan and every task, updated after each
-   merge.
+   becomes a small fix task. The draft pull request shows your request, the plan and every task.
 
 ## The roles
 
@@ -40,6 +40,10 @@ Each agent runs as its own background Claude Code session, except the reviewer, 
 A small local page shows each task moving from queued to working, through the officer's check, to done. It also
 holds the plan, the officer's reports, and each task's brief, changes and review. You approve plans and answer
 questions there too. It runs on `127.0.0.1` only and costs nothing to keep open.
+
+Read each agent's conversation live, and open any file or image in a viewer. The plan shows its short version (the
+goal, the tasks, each question with its default), and you approve it with an answer per question. Everything
+waiting on you is in one list at the top.
 
 ## Design languages
 

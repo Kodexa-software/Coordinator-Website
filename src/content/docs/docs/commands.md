@@ -17,14 +17,15 @@ The live page opens and Coordinator tells you when the plan is ready. After that
 |---|---|
 | `/coordinate <request>` | Start a run |
 | `/coordinate plan <goal>` | Plan only: goals, milestones and tasks, saved in the project for a later run |
-| `/coordinate status` | Open the live page; one line in chat |
-| `/coordinate approve` | Approve the plan; building starts |
+| `/coordinate status` | Open the live page; one line in chat, and what's waiting on you |
+| `/coordinate approve` | Approve the plan; building starts. On the live page you can answer per question |
 | `/coordinate answer T3 <text>` | Answer an agent's question |
 | `/coordinate tell T3 <text>` | Send a note to a running agent; it arrives at its next step |
 | `/coordinate add <text>` | Change the plan or add work; it goes back through the officer and you |
 | `/coordinate pause` / `resume` | Agents write an exact next step and stop / pick up where they stopped |
 | `/coordinate run` | Build a plan-only run, today or weeks later |
 | `/coordinate shots [note]` | Before/after screenshots (base branch vs run branch) as one PNG, saved in the shots task's folder: `<project>/.coordinator/<run>/tasks/<id>/` |
+| `/coordinate todo` / `todo done <n>` | Manual steps only you can do, recorded by agents with `coord task todo` / mark one done |
 | `/coordinate accept T3` / `retry T3` / `stop T3` | Settle a task the officer keeps sending back / start it fresh / skip it |
 | `/coordinate list` | The coordinators in this project |
 | `/coordinate update` | Update Coordinator to the latest version |

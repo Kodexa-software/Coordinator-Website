@@ -21,7 +21,7 @@ run if you haven't.
 | `deny` | push, commit, rebase, `reset --hard`, `gh pr`, publish, `sudo`, ... | Commands agents may never run |
 | `test_names` / `test_dirs` | common test file and folder patterns | What counts as a test file for the tests guard |
 | `gitignore` | `true` | Add `.coordinator/` to the project's `.gitignore` when it isn't there |
-| `push` / `pr` | `true` | Push the run branch after every merged task, and keep a draft PR with the request, the plan and the tasks up to date |
+| `push` / `pr` | `true` | Push the run branch after every merged task. The draft PR opens when you approve the plan, with a status body kept up to date |
 | `base_branch` | the current branch | What the run branch starts from |
 
 ## Where things live
@@ -30,6 +30,7 @@ run if you haven't.
 |---|---|---|
 | Project settings | `<project>/.coordinator/config.json` | kept |
 | The run's knowledge: `plan.md`, `tasks.json`, and per task `knowledge.md`, `changes.md`, `review.md`, officer reports | `<project>/.coordinator/<run>/` | kept, so a later run can continue |
+| Screenshots and other artifacts | `<project>/.coordinator/<run>/tasks/<id>/` | kept; removed with `--purge` |
 | Processes, logs, worktrees | `~/.coordinator/runs/<run>/` | removed |
 | Run branch | `coord/<run>`, pushed after every merged task, with a draft PR | kept |
 | Task branches | `coord-tasks/<run>/<task>` | removed |
