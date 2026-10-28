@@ -1,3 +1,6 @@
 .DS_Store
 .wrangler/
 node_modules/
+
+# Coordinator's local knowledge
+/.coordinator/
