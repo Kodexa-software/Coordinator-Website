@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coordinator · Conduct a team of Claude Code agents</title>
+<meta name="description" content="Coordinator plans the work, has a hallucination officer check it against your exact words, and builds it in parallel in the background. A Claude Code plugin.">
+<meta property="og:title" content="Coordinator">
+<meta property="og:description" content="Conduct a team of Claude Code agents from one request.">
+<meta property="og:image" content="assets/logo.svg">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<style>
+:root{
+  --paper:#f7f3ea;--paper-2:#efe8da;--card:#fffdf8;--ink:#171a2e;--ink-2:#45475a;--muted:#77705f;--line:#e2d9c6;
+  --gold:#a8833f;--gold-2:#c9a45c;--gold-3:#e6c983;--night:#0f1226;--night-2:#151a36;--night-3:#1e2448;--ivory:#f6efe0;
+  --ok:#2f7d55;--bad:#a8423b;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#0f1226;--paper-2:#141834;--card:#181d3c;--ink:#efe8d8;--ink-2:#c9c2b1;--muted:#a39b88;--line:#2b3157;
+  --gold:#e0c27c;--gold-2:#d4b06a;--ok:#73cf9c;--bad:#f0928a;
+}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img{max-width:100%}
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+.eyebrow{font:600 12px/1 var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--gold)}
+.eb{display:flex;flex-wrap:wrap;gap:10px 0;line-height:1.4}
+.eb span{white-space:nowrap}
+.eb span+span::before{content:"·";margin:0 .9em}
+h1,h2,h3{font-family:var(--serif);font-weight:500;letter-spacing:-.01em;margin:0}
+h2{font-size:clamp(32px,4.2vw,48px);line-height:1.1}
+h3{font-size:22px;line-height:1.25}
+p{margin:0}
+.lead{font-size:19px;color:var(--ink-2);max-width:62ch}
+.rule{width:64px;height:2px;background:linear-gradient(90deg,var(--gold-3),var(--gold));border:0;margin:22px 0}
+section{padding:110px 0}
+section.alt{background:var(--paper-2)}
+.head{max-width:760px;margin-bottom:56px}
+.head .lead{margin-top:18px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:13px 22px;border-radius:999px;font:600 15px/1 var(--sans);text-decoration:none;border:1px solid transparent;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.gold{background:linear-gradient(135deg,var(--gold-3),var(--gold-2));color:#1a1608}
+.btn.ghost{border-color:rgba(230,201,131,.45);color:var(--ivory)}
+.btn.ghost:hover{border-color:var(--gold-3)}
+.btn svg{width:18px;height:18px}
+
+/* nav */
+nav{position:absolute;top:0;left:0;right:0;z-index:5}
+nav .wrap{display:flex;align-items:center;gap:28px;height:78px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ivory);font:500 21px var(--serif)}
+.brand img{width:34px;height:34px;border-radius:9px}
+nav .links{display:flex;gap:26px;margin-left:auto;font-size:14.5px}
+nav .links a{color:#cfc6b0;text-decoration:none}
+nav .links a:hover{color:var(--ivory)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;color:var(--ivory);padding:150px 0 120px;
+  background:radial-gradient(ellipse 80% 70% at 22% 18%,#262d5c 0%,transparent 60%),radial-gradient(ellipse 60% 60% at 85% 80%,#1c2148 0%,transparent 60%),var(--night)}
+.hero::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 23px,rgba(230,201,131,.035) 23px 24px);pointer-events:none}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(44px,6.2vw,78px);line-height:1.02;margin:22px 0 26px}
+.hero h1 em{font-style:italic;color:var(--gold-3)}
+.hero .lead{color:#d8cfbb;font-size:19.5px}
+.cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:36px}
+.fine{margin-top:22px;font-size:13.5px;color:#a9a08b}
+.stage{position:relative;aspect-ratio:1/1;max-width:470px;justify-self:center;width:100%}
+.stage svg{width:100%;height:auto;overflow:visible}
+.beat{transform-box:fill-box;transform-origin:center;animation:beat 3.2s ease-in-out infinite}
+.beat:nth-of-type(2){animation-delay:.32s}.beat:nth-of-type(3){animation-delay:.64s}.beat:nth-of-type(4){animation-delay:.96s}.beat:nth-of-type(5){animation-delay:1.28s}
+@keyframes beat{0%,60%,100%{transform:scale(1);opacity:.78}20%{transform:scale(1.22);opacity:1}}
+.tip{animation:glint 3.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes glint{0%,100%{opacity:.55;transform:scale(.85)}15%{opacity:1;transform:scale(1.25)}}
+
+/* terminal */
+.term{margin-top:-58px;position:relative;z-index:2}
+.term .card{max-width:880px;margin:0 auto;background:#12162e;color:#e9e2d0;border:1px solid #2a3060;border-radius:16px;box-shadow:0 30px 80px rgba(10,12,30,.35);overflow:hidden}
+.term .bar{display:flex;gap:7px;padding:13px 16px;border-bottom:1px solid #232850}
+.term .bar i{width:11px;height:11px;border-radius:50%;background:#3a4070}
+.term .bar span{margin-left:10px;font:12px var(--sans);color:#8f88a8}
+.term pre{margin:0;padding:22px 26px 26px;font:14px/1.85 var(--mono);white-space:pre-wrap;overflow-x:auto}
+.term .p{color:var(--gold-3)}.term .d{color:#8f89a6}.term .ok{color:#7fd3a3}.term .w{color:#f0c674}
+.caption{text-align:center;color:var(--muted);font-size:13.5px;margin-top:14px}
+
+/* movements */
+.score{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;border-top:1px solid var(--line)}
+.mv{padding:30px 22px 8px 0;position:relative}
+.mv+.mv{padding-left:22px;border-left:1px solid var(--line)}
+.mv .num{font:italic 500 40px/1 var(--serif);color:var(--gold)}
+.mv h3{margin:16px 0 10px}
+.mv p{font-size:15.5px;color:var(--ink-2)}
+.mv.you .num::after{content:"you";font:600 10px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:#1a1608;background:var(--gold-3);border-radius:999px;padding:5px 9px;margin-left:12px;vertical-align:middle;font-style:normal}
+
+/* officer */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.checks{list-style:none;padding:0;margin:34px 0 0;display:grid;gap:18px}
+.checks li{display:grid;grid-template-columns:30px 1fr;gap:14px}
+.checks li::before{content:"";width:30px;height:30px;border-radius:50%;border:1px solid var(--gold-2);background:radial-gradient(circle,var(--gold-2) 0 4px,transparent 5px)}
+.checks b{display:block;font:500 19px var(--serif)}
+.checks span{color:var(--ink-2);font-size:15.5px}
+.report{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px 28px;box-shadow:0 1px 2px rgba(20,20,40,.05),0 18px 50px rgba(20,20,40,.07);position:sticky;top:30px}
+.report .tag{display:inline-block;font:600 11px/1 var(--sans);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+.report h4{font:500 20px var(--serif);margin:0 0 14px}
+.verdict{display:flex;gap:10px;align-items:baseline;padding:12px 14px;border-radius:10px;background:rgba(168,66,59,.08);margin-bottom:18px;font-size:15px}
+.verdict b{color:var(--bad);letter-spacing:.08em;font-size:13px}
+.report ol{margin:0;padding-left:20px;display:grid;gap:12px;font-size:15px;color:var(--ink-2)}
+.report q{font-style:italic}
+.report .round{margin-top:20px;padding-top:16px;border-top:1px dashed var(--line);font-size:14px;color:var(--muted)}
+.report .round b{color:var(--ok)}
+
+/* conductor never plays */
+.lanes{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:28px}
+.lane{display:grid;grid-template-columns:44px 1fr;align-items:center;gap:12px;margin:12px 0}
+.lane .lab{font:600 13px var(--mono);color:var(--gold)}
+.track{position:relative;height:30px;border-radius:8px;background:repeating-linear-gradient(90deg,transparent 0 calc(10% - 1px),var(--line) calc(10% - 1px) 10%)}
+.seg{position:absolute;top:4px;bottom:4px;border-radius:6px;font:600 11px/22px var(--sans);padding:0 8px;color:#1a1608;white-space:nowrap;overflow:hidden}
+.seg.b{background:linear-gradient(90deg,var(--gold-3),var(--gold-2))}
+.seg.o{background:#cfc7f0;color:#25204a}
+.seg.p{background:#d9e6dd;color:#1f4a33}
+@media (prefers-color-scheme:dark){.seg.o{background:#3a3570;color:#e5e0ff}.seg.p{background:#1f3a2c;color:#bfe9cf}}
+.lanes .body{position:relative}
+.mark{position:absolute;top:-6px;bottom:-6px;left:calc(56px + (100% - 56px) * .255);border-left:2px dashed var(--gold-2)}
+.mark span{position:absolute;top:-26px;left:-34px;font:600 10.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;font-size:12.5px;color:var(--muted)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.facts{display:grid;gap:26px;margin-top:8px}
+.fact b{display:block;font:500 21px var(--serif);margin-bottom:4px}
+.fact span{color:var(--ink-2);font-size:15.5px}
+
+/* live page */
+.shot{border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px rgba(20,20,40,.14)}
+.shot img{display:block;width:100%}
+
+/* guard rails */
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.rail{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 22px}
+.rail .ico{width:36px;height:36px;color:var(--gold);margin-bottom:16px}
+.rail h3{font-size:20px;margin-bottom:8px}
+.rail p{font-size:15px;color:var(--ink-2)}
+
+/* compare */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:15px}
+th,td{text-align:left;padding:15px 18px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+thead th{font:500 17px var(--serif);background:var(--paper-2)}
+thead th:nth-child(2){color:var(--gold)}
+tbody td:first-child{color:var(--muted);font-size:13.5px;letter-spacing:.02em;width:19%}
+tbody td:nth-child(2){font-weight:600}
+td:nth-child(3),td:nth-child(4){color:var(--ink-2)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+.stat{border-top:2px solid var(--gold-2);padding-top:16px}
+.stat .v{font:500 36px/1.1 var(--serif)}
+.stat .v small{font-size:18px;color:var(--muted)}
+.stat .k{color:var(--muted);font-size:14px;margin-top:6px}
+.note{margin-top:22px;color:var(--muted);font-size:14.5px;max-width:80ch}
+
+/* install */
+.install{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.code{background:#12162e;color:#e9e2d0;border-radius:14px;border:1px solid #2a3060;overflow:hidden}
+.code .top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #232850;font:600 12px var(--sans);letter-spacing:.12em;text-transform:uppercase;color:#a59fbd}
+.code button{font:600 12px var(--sans);color:var(--gold-3);background:none;border:1px solid #3a4070;border-radius:999px;padding:5px 12px;cursor:pointer}
+.code button:hover{border-color:var(--gold-3)}
+.code pre{margin:0;padding:18px 20px;font:14px/1.8 var(--mono);overflow-x:auto}
+.code .c{color:#8f89a6}
+.reqs{margin-top:20px;color:var(--muted);font-size:14.5px}
+.cmds{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 28px;margin-top:56px}
+.cmd{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;align-items:baseline;padding:12px 0;border-bottom:1px solid var(--line)}
+.cmd code{font:600 14px var(--mono);color:var(--gold)}
+.cmd span{font-size:14.5px;color:var(--ink-2)}
+
+/* footer */
+footer{background:var(--night);color:#b9b09b;padding:56px 0}
+footer .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+footer .brand{font-size:19px}
+footer .links{display:flex;gap:22px;margin-left:auto;font-size:14px}
+footer a{text-decoration:none;color:#d8cfbb}
+footer a:hover{color:var(--gold-3)}
+footer .small{width:100%;font-size:13px;color:#857d6b;margin-top:6px}
+
+@media (max-width:980px){
+  .hero .wrap,.split,.install{grid-template-columns:1fr}
+  .stage{max-width:340px;order:-1}
+  .score{grid-template-columns:1fr 1fr}
+  .mv,.mv+.mv{padding:24px 18px 18px 0;border-left:0;border-bottom:1px solid var(--line)}
+  .grid4{grid-template-columns:1fr 1fr}
+  .cmds{grid-template-columns:1fr 1fr}
+  .report{position:static}
+  nav .links a:not(.gh){display:none}
+}
+@media (max-width:600px){
+  body{font-size:16px}
+  .wrap{padding:0 16px}
+  section{padding:76px 0}
+  .hero{padding:118px 0 100px}
+  .score,.grid4,.cmds,.stats{grid-template-columns:1fr}
+  .term pre{font-size:12.5px;padding:18px}
+  .seg{font-size:0}
+  .eb span:nth-child(3){display:none}
+  .code pre{white-space:pre-wrap;word-break:break-all;font-size:13px}
+  .lead,.hero .lead{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/logo.svg" alt="">Coordinator</a>
+    <div class="links">
+      <a href="#how">How it works</a>
+      <a href="#officer">The officer</a>
+      <a href="#compare">Compare</a>
+      <a href="#install">Install</a>
+      <a class="gh" href="https://github.com/Kodexa-software/Coordinator">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow eb"><span>A Claude Code plugin</span><span>open source</span><span>v0.3</span></div>
+      <h1>Conduct a team of agents from <em>one request.</em></h1>
+      <p class="lead">Coordinator plans the work, has a hallucination officer check the plan against your exact words, then builds it in parallel. Each task runs in its own worktree and is reviewed and checked again before it merges. All of it happens in the background. You approve once.</p>
+      <div class="cta">
+        <a class="btn gold" href="#install">Install Coordinator</a>
+        <a class="btn ghost" href="https://github.com/Kodexa-software/Coordinator">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          View on GitHub</a>
+      </div>
+      <p class="fine">Works in any git project. MIT licensed.</p>
+    </div>
+    <div class="stage" aria-hidden="true">
+      <svg viewBox="0 0 512 512">
+        <defs>
+          <radialGradient id="h-bg" cx="30%" cy="22%" r="95%"><stop offset="0" stop-color="#2a3266"/><stop offset=".55" stop-color="#171c3c"/><stop offset="1" stop-color="#0c0f22"/></radialGradient>
+          <linearGradient id="h-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ecd291"/><stop offset="1" stop-color="#b28a45"/></linearGradient>
+          <linearGradient id="h-ivory" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6efe0"/><stop offset="1" stop-color="#d9ccb0"/></linearGradient>
+          <radialGradient id="h-spot" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#3a447f" stop-opacity=".55"/><stop offset="1" stop-color="#3a447f" stop-opacity="0"/></radialGradient>
+          <radialGradient id="h-glow" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#f3dc9c" stop-opacity=".95"/><stop offset="1" stop-color="#f3dc9c" stop-opacity="0"/></radialGradient>
+        </defs>
+        <ellipse cx="200" cy="300" rx="230" ry="210" fill="url(#h-spot)"/>
+        <ellipse cx="161" cy="474" rx="120" ry="14" fill="#000" fill-opacity=".35"/>
+        <path d="M 216.98 130.12 A 200 200 0 0 1 409.88 323.02" fill="none" stroke="url(#h-gold)" stroke-opacity=".5" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round"/>
+        <g fill="url(#h-gold)">
+          <circle class="beat" cx="245" cy="133" r="15"/><circle class="beat" cx="304" cy="153" r="15"/><circle class="beat" cx="351" cy="189" r="15"/><circle class="beat" cx="387" cy="236" r="15"/><circle class="beat" cx="407" cy="295" r="15"/>
+        </g>
+        <g fill="none" stroke="#e6c983" stroke-opacity=".3" stroke-width="2">
+          <circle cx="245" cy="133" r="24"/><circle cx="304" cy="153" r="24"/><circle cx="351" cy="189" r="24"/><circle cx="387" cy="236" r="24"/><circle cx="407" cy="295" r="24"/>
+        </g>
+        <g fill="url(#h-ivory)" stroke="url(#h-ivory)" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="160" cy="232" r="30" stroke="none"/>
+          <path d="M 112 298 C 120 274, 200 268, 210 290 L 198 372 C 207 402, 214 438, 208 462 L 170 446 L 161 414 L 152 446 L 114 462 C 108 438, 115 402, 124 372 Z" stroke="none"/>
+          <path d="M 120 302 Q 92 284 78 232" fill="none" stroke-width="22"/>
+          <path d="M 202 296 Q 238 272 262 222" fill="none" stroke-width="22"/>
+        </g>
+        <path d="M 161 300 L 161 404" stroke="#151a36" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"/>
+        <rect x="86" y="468" width="150" height="9" rx="4.5" fill="url(#h-gold)" fill-opacity=".85"/>
+        <path d="M 262 222 L 318 150" stroke="#f6efe0" stroke-width="5" stroke-linecap="round"/>
+        <circle class="tip" cx="318" cy="150" r="22" fill="url(#h-glow)"/>
+        <circle cx="318" cy="150" r="4" fill="#fff8e6"/>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<div class="term wrap">
+  <div class="card">
+    <div class="bar"><i></i><i></i><i></i><span>Claude Code</span></div>
+<pre><span class="p">›</span> /coordinate Add CSV export to the orders table, with the same columns the table shows.
+<span class="d">  started orders-csv-export · planning · live page http://127.0.0.1:7412</span>
+<span class="d">  officer sent the plan back once: T4 added a dashboard nobody asked for</span>
+<span class="w">  plan ready</span> · 3 tasks · T1 and T2 in parallel, then T3 · no questions
+<span class="p">›</span> approve
+<span class="d">  building T1 ∥ T2 · each in its own worktree, each with its own reviewer</span>
+<span class="ok">  finished</span> · 3/3 checked, merged and pushed · draft PR updated after every task</pre>
+  </div>
+  <p class="caption">An illustrative run. You type two things; everything else happens in the background.</p>
+</div>
+
+<section id="how">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow">How it works</div>
+      <hr class="rule">
+      <h2>Every run follows the same score.</h2>
+      <p class="lead">Five movements. You come in once, at the third.</p>
+    </div>
+    <div class="score">
+      <div class="mv"><div class="num">I</div><h3>Plan</h3><p>A strong planner reads the code your request touches, not the whole repository, and writes a short plan of small tasks. Each task gets its dependencies, the files it may change, and the model and effort it needs.</p></div>
+      <div class="mv"><div class="num">II</div><h3>Audit</h3><p>The hallucination officer compares the plan with everything you said. Invented features, oversized answers to simple asks, missing requirements and the wrong model for a task all go back to the planner, for as many rounds as it takes.</p></div>
+      <div class="mv you"><div class="num">III</div><h3>Approve</h3><p>You read one audited plan on the live page and approve it, or say what to change. This is the only stop in the run.</p></div>
+      <div class="mv"><div class="num">IV</div><h3>Build</h3><p>Tasks that don't depend on each other run at the same time, each in its own git worktree, and each builder runs its own reviewer.</p></div>
+      <div class="mv"><div class="num">V</div><h3>Merge</h3><p>The officer checks each finished task against the plan. A script then commits, merges into the run branch, runs your gate and pushes, so a draft pull request fills up task by task.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="officer">
+  <div class="wrap split">
+    <div>
+      <div class="eyebrow">The hallucination officer</div>
+      <hr class="rule">
+      <h2>The one who says no, before you have to.</h2>
+      <p class="lead" style="margin-top:18px">Agents like to over-deliver. Ask for a simple app and you can get an enterprise platform; ask for a feature and you can get five thousand lines of tests. The officer is there to stop that before the plan ever reaches you, and again before each task merges.</p>
+      <ul class="checks">
+        <li><div><b>Grounded</b><span>Every task traces back to your words or to the code. The officer also checks that the paths and names a plan cites really exist.</span></div></li>
+        <li><div><b>Complete, and nothing more</b><span>Every requirement has a task, and nothing extra rides along. Your later additions and answers count exactly like the original request.</span></div></li>
+        <li><div><b>Proportionate</b><span>The number and size of the tasks, how much runs in parallel, and whether each task has the right model and effort.</span></div></li>
+        <li><div><b>No surprise tests</b><span>Tests only when you ask for them, and then only a few short, relevant ones. A hook enforces it.</span></div></li>
+      </ul>
+    </div>
+    <aside class="report" aria-label="Example officer report">
+      <div class="tag">Example report</div>
+      <h4>Officer report · plan, round 1</h4>
+      <div class="verdict"><b>REVISE</b><span>T4 adds an admin dashboard. The request asks only for a CSV export.</span></div>
+      <ol>
+        <li>Drop T4. <q>Add CSV export to the orders table</q> names no dashboard.</li>
+        <li>T2 waits for T1, but they share no files. Run them in parallel.</li>
+        <li>T3 uses Opus at extra-high effort for a label change. Sonnet at medium fits.</li>
+        <li>T1 turns tests on, but nobody asked for tests. Turn them off.</li>
+      </ol>
+      <div class="round">Round 2 · <b>APPROVE</b> · every requirement covered, nothing added.</div>
+    </aside>
+  </div>
+</section>
+
+<section id="conductor">
+  <div class="wrap split">
+    <div>
+      <div class="eyebrow">Zero-token conducting</div>
+      <hr class="rule">
+      <h2>The conductor never plays.</h2>
+      <p class="lead" style="margin-top:18px">Scheduling, merging, the gate and the live page are plain code. They cost no tokens. Agents spend tokens only on planning, building and checking.</p>
+      <div class="facts" style="margin-top:34px">
+        <div class="fact"><b>Small, fresh contexts</b><span>Each task gets its own Claude Code session and ends with it, so no agent drags a half-million-token context through the run.</span></div>
+        <div class="fact"><b>Parallel by default</b><span>The file lists in the plan let independent tasks run side by side without stepping on each other.</span></div>
+        <div class="fact"><b>Live on GitHub</b><span>Your checkout is never touched. The run branch is pushed after every merged task, and its draft pull request shows your request, the plan and each task as it lands.</span></div>
+      </div>
+    </div>
+    <div class="lanes" role="img" aria-label="Timeline: T1 and T2 build in parallel, each followed by an officer check; T3 starts after both merge">
+      <div class="eyebrow" style="margin-bottom:40px">A run, on one timeline</div>
+      <div class="body"><div class="mark"><span>you approve</span></div><div class="lane"><span class="lab">T0</span><div class="track"><div class="seg p" style="left:0;width:17%">plan</div><div class="seg o" style="left:17.5%;width:7%" title="officer check"></div></div></div>
+      <div class="lane"><span class="lab">T1</span><div class="track"><div class="seg b" style="left:27%;width:31%">build + review</div><div class="seg o" style="left:58.5%;width:7%" title="officer check"></div></div></div>
+      <div class="lane"><span class="lab">T2</span><div class="track"><div class="seg b" style="left:27%;width:24%">build + review</div><div class="seg o" style="left:51.5%;width:7%" title="officer check"></div></div></div>
+      <div class="lane"><span class="lab">T3</span><div class="track"><div class="seg b" style="left:67%;width:24%">build + review</div><div class="seg o" style="left:91.5%;width:7%" title="officer check"></div></div></div></div>
+      <div class="legend"><span><i style="background:#d9e6dd"></i>plan</span><span><i style="background:var(--gold-3)"></i>build</span><span><i style="background:#cfc7f0"></i>officer check</span><span><i style="background:none;border-left:2px dashed var(--gold-2);border-radius:0;width:2px"></i>your approval</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="live">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow">The live page</div>
+      <hr class="rule">
+      <h2>Watch the whole ensemble.</h2>
+      <p class="lead">A small local page shows every task moving from queued to done, along with the plan, the officer's reports, and each task's brief, changes and review. You approve plans and answer questions there too. It runs on 127.0.0.1 and costs nothing to keep open.</p>
+    </div>
+    <div class="shot"><img src="assets/live-page.png" alt="The live page showing a plan: its steps, goal, approach, out-of-scope list and tasks"></div>
+  </div>
+</section>
+
+<section id="rails">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow">Guard rails</div>
+      <hr class="rule">
+      <h2>Built for people who have been burned before.</h2>
+    </div>
+    <div class="grid4">
+      <div class="rail"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 4h10M7 9h10M7 14h6"/><path d="M4 20l3-3h13V2H4z"/></svg><h3>Your words are the spec</h3><p>The request, every addition and every answer are kept word for word, and the planner and the officer judge against all of them.</p></div>
+      <div class="rail"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 3h6M10 3v6l-5 9a2 2 0 002 3h10a2 2 0 002-3l-5-9V3"/><path d="M4 4l16 16"/></svg><h3>No tests unless you ask</h3><p>Tests are off by default, and a hook blocks builders from touching test files. When you do ask, the tests stay few, short and relevant.</p></div>
+      <div class="rail"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3v12M18 9v12"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="6" r="3"/></svg><h3>Agents stay in their lane</h3><p>A builder writes only inside its own worktree. Only the scheduler commits; no agent pushes or switches branches.</p></div>
+      <div class="rail"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg><h3>Never on your base branch</h3><p>Work is pushed to its own run branch and draft pull request, and nothing is merged into your base branch for you. One setting keeps a run fully local.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt" id="compare">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow">How it compares</div>
+      <hr class="rule">
+      <h2>Rebuilt from measurements.</h2>
+      <p class="lead">Coordinator 0.2 replaces an earlier, unpublished version. Here it is next to that version, and next to Claude Code's own <code style="font-family:var(--mono);font-size:.9em">/loop</code>.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th></th><th>Coordinator 0.2</th><th>Coordinator 0.1</th><th>The /loop skill</th></tr></thead>
+        <tbody>
+          <tr><td>What runs the show</td><td>A script, at no token cost; agents are separate sessions</td><td>An Opus coordinator session with lead agents under it</td><td>One session re-running a prompt</td></tr>
+          <tr><td>Who writes the code</td><td>Opus by default; the planner picks per task, and the officer checks the pick</td><td>Mostly Sonnet workers; Opus only managed</td><td>The session's own model</td></tr>
+          <tr><td>Between your words and the code</td><td>One brief, checked by the officer</td><td>Three layers of briefs</td><td>Nothing</td></tr>
+          <tr><td>Parallel work</td><td>Yes, a worktree per task</td><td>One task at a time</td><td>No</td></tr>
+          <tr><td>Guard against invented scope</td><td>The officer, on the plan and on every task</td><td>Reviewers compared diffs with briefs</td><td>None built in</td></tr>
+          <tr><td>Tests</td><td>Off unless you ask; enforced</td><td>Written by default</td><td>Whatever the prompt says</td></tr>
+          <tr><td>Status</td><td>A live local page, and a draft PR updated after every task</td><td>Status files and HTML reports written by agents</td><td>The chat</td></tr>
+          <tr><td>Context per agent</td><td>Small: one fresh session per task</td><td>Grew to 250–460K tokens per worker</td><td>Grows with every iteration</td></tr>
+          <tr><td>Best for</td><td>Requests that split into several tasks</td><td>Retired</td><td>Watching something over time</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="v">212M <small>/</small> 371M+</div><div class="k">tokens in two component upgrades on 0.1, against about 87M for similar work in one direct session</div></div>
+      <div class="stat"><div class="v">40 <small>/</small> 64</div><div class="k">agents in those two runs, one task at a time</div></div>
+      <div class="stat"><div class="v">12h <small>/</small> 23h+</div><div class="k">of wall-clock time, against about 4 hours done directly</div></div>
+    </div>
+    <p class="note">Measured from the transcripts of real runs on 0.1. Those numbers shaped 0.2: fewer and stronger agents, parallel work, an officer in place of after-the-fact cleanup, and no proof work nobody asked for. Numbers for 0.2 will be published once it has done runs of the same size.</p>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <div class="head">
+      <div class="eyebrow">Install</div>
+      <hr class="rule">
+      <h2>Two lines, then one request.</h2>
+    </div>
+    <div class="install">
+      <div class="code">
+        <div class="top"><span>As a Claude Code plugin</span><button data-copy="p1">Copy</button></div>
+<pre id="p1">/plugin marketplace add Kodexa-software/Coordinator
+/plugin install coordinator@coordinator</pre>
+      </div>
+      <div class="code">
+        <div class="top"><span>From source</span><button data-copy="p2">Copy</button></div>
+<pre id="p2">git clone https://github.com/Kodexa-software/Coordinator.git
+cd Coordinator &amp;&amp; ./install.sh</pre>
+      </div>
+    </div>
+    <p class="reqs">Needs a recent Claude Code CLI, Python 3.9+ and git, plus the GitHub CLI for the live pull request. Before/after screenshots also need Node.js; Playwright is fetched on first use.</p>
+
+    <div class="cmds">
+      <div class="cmd"><code>/coordinate &lt;request&gt;</code><span>start a run</span></div>
+      <div class="cmd"><code>plan &lt;goal&gt;</code><span>plan only, build later</span></div>
+      <div class="cmd"><code>status</code><span>open the live page</span></div>
+      <div class="cmd"><code>approve</code><span>approve the plan</span></div>
+      <div class="cmd"><code>answer T3 …</code><span>answer an agent</span></div>
+      <div class="cmd"><code>tell T3 …</code><span>note to a running agent</span></div>
+      <div class="cmd"><code>add …</code><span>change the plan</span></div>
+      <div class="cmd"><code>pause · resume</code><span>stop safely, pick up later</span></div>
+      <div class="cmd"><code>shots</code><span>before/after PNG to your Desktop</span></div>
+      <div class="cmd"><code>accept · retry · stop</code><span>settle a task</span></div>
+      <div class="cmd"><code>run</code><span>build a saved plan</span></div>
+      <div class="cmd"><code>map</code><span>map the project for planners</span></div>
+      <div class="cmd"><code>terminate</code><span>end the run and clean up</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/logo.svg" alt="">Coordinator</a>
+    <div class="links">
+      <a href="https://github.com/Kodexa-software/Coordinator">GitHub</a>
+      <a href="https://github.com/Kodexa-software/Coordinator/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/Kodexa-software/Coordinator/issues">Issues</a>
+    </div>
+    <div class="small">Coordinator 0.3.0 · MIT licensed · Built by <a href="https://github.com/Kodexa-software">Kodexa</a></div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll("[data-copy]").forEach(function (b) {
+  b.addEventListener("click", function () {
+    var text = document.getElementById(b.dataset.copy).textContent;
+    var done = function () { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1600); };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {});
+  });
+});
+</script>
+</body>
+</html>
