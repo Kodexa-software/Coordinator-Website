@@ -1,0 +1,89 @@
+---
+// The showcase video, made in Kodexa Video Studio: 16:9 from 50rem up, 9:16 below. Posters are set by the script
+// for the visible video only, so the hidden one fetches nothing; without JS both still play, just without a poster.
+const videos = [
+  { size: 'desktop', width: 1920, height: 1080 },
+  { size: 'mobile', width: 1080, height: 1920 },
+];
+---
+
+<section class="showcase" aria-labelledby="showcase-title">
+  <div class="inner">
+    <h2 id="showcase-title" data-reveal="fade">See a run</h2>
+    {
+      videos.map((video) => (
+        <div class={`frame ${video.size}`}>
+          <video
+            controls
+            playsinline
+            preload="none"
+            width={video.width}
+            height={video.height}
+            data-poster={`/video/coordinator-showcase-${video.size}.jpg`}
+            aria-label="Coordinator showcase video"
+          >
+            <source src={`/video/coordinator-showcase-${video.size}.mp4`} type="video/mp4" />
+          </video>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  // Must match the 50rem switch in the styles below.
+  const wide = matchMedia('(min-width: 50rem)');
+  const pick = () => {
+    for (const video of document.querySelectorAll<HTMLVideoElement>('.showcase video')) {
+      const shown = video.closest('.desktop') ? wide.matches : !wide.matches;
+      if (shown && !video.poster) video.poster = video.dataset.poster ?? '';
+      if (!shown) video.pause();
+    }
+  };
+  pick();
+  wide.addEventListener('change', pick);
+</script>
+
+<style>
+  .inner {
+    box-sizing: border-box;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: clamp(4rem, 8vw, 7.5rem) 1.5rem;
+  }
+  h2 {
+    margin: 0 0 2.5rem;
+    font-size: var(--co-text-2xl);
+    font-weight: var(--co-weight-display);
+    line-height: var(--co-leading-heading);
+    letter-spacing: var(--co-tracking-heading);
+  }
+  .frame {
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid var(--co-line);
+    border-radius: var(--co-radius-lg);
+    background: var(--co-sunken);
+    box-shadow: var(--co-shadow-1);
+  }
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .desktop {
+    display: none;
+  }
+  .mobile {
+    width: min(100%, calc(80svh * 9 / 16));
+    margin-inline: auto;
+  }
+  @media (min-width: 50rem) {
+    .desktop {
+      display: block;
+    }
+    .mobile {
+      display: none;
+    }
+  }
+</style>

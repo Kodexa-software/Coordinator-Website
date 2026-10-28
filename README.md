@@ -20,6 +20,7 @@ Needs Node 22.22 or newer.
 | `src/pages/` | The landing page and other custom pages |
 | `src/content/docs/docs/` | The documentation (Starlight) |
 | `public/brand/` | Logo, mark, banner, favicon and fonts |
+| `public/video/` | The showcase videos, made in Kodexa Video Studio |
 | `DESIGN.md` | The brand and design system |
 | `scripts/` | The Coordinator sync |
 | `wrangler.jsonc` | Serves `dist/` as static assets on Cloudflare |
