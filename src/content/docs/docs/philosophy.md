@@ -36,3 +36,7 @@ project wins. Conflicts with how Coordinator works are put to you as questions.
 Agents never commit, push or switch branches; the scheduler does. The run branch is pushed after every merged task
 with a draft pull request. Nothing is merged into your base branch for you. Set `"push": false` to keep a run
 local.
+
+## Nothing leaves your machine
+
+Screenshots and other artifacts stay in the task's folder. Deleting the run's folder cleans them up.

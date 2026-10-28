@@ -40,6 +40,9 @@ COORDINATOR_DIR=~/.coordinator/app npm run dev
 
 - on every push to `main`, which includes every merged pull request;
 - on demand, from the Actions tab (**Deploy**, then **Run workflow**);
+- on every commit to Coordinator's `main`, through Coordinator's `.github/workflows/website.yml`. That needs the
+  `WEBSITE_DEPLOY_TOKEN` secret in the Coordinator repo: a fine-grained token with **Actions: read and write** on
+  Coordinator-Website. Without it, the hourly check catches up;
 - hourly, but only when Coordinator's `HEAD` differs from the `sha` in the live `coordinator.json`. If that file
   can't be read, it builds anyway.
 
