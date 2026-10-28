@@ -13,12 +13,16 @@ work against all of them.
 ## The conductor never plays
 
 Scheduling, merging, the gate and the live page are plain code and cost no tokens. Agents spend tokens only on
-planning, building and checking.
+planning, building and checking. They script repetitive work and hand big reads to the briefer, to save
+tokens.
 
 ## Small tasks, one approval
 
 The planner splits your request into small tasks, and the officer audits the plan before you see it. You approve
 it once. After that, agents only ask you about decisions that are yours to make.
+
+Agents can't approve, answer, merge or end a run for you. An agent that asks you stops until you answer, and a plan
+can't be approved while the officer still checks it.
 
 ## No tests unless you ask
 
@@ -34,8 +38,8 @@ project wins. Conflicts with how Coordinator works are put to you as questions.
 ## Nothing lands on your base branch
 
 Agents never commit, push or switch branches; the scheduler does. The run branch is pushed after every merged task
-with a draft pull request. Nothing is merged into your base branch for you. Set `"push": false` to keep a run
-local.
+with a draft pull request. Pull requests merge into your base branch only when you approve merge all. Set
+`"push": false` to keep a run local.
 
 ## Nothing leaves your machine
 
