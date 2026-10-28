@@ -1,0 +1,103 @@
+/* Coordinator brand tokens. Design notes: DESIGN.md. Fonts: public/brand/fonts/fonts.css.
+   Colours follow the OS (prefers-color-scheme) unless [data-theme] pins one, as Starlight does. */
+
+:root {
+  color-scheme: light dark;
+
+  /* Surfaces */
+  --co-bg: light-dark(#fafafd, #0d0c13);
+  --co-surface: light-dark(#ffffff, #15151d);
+  --co-sunken: light-dark(#f2f2f6, #08080d);
+  --co-line: light-dark(#dfdfe6, #2a2a34);
+  --co-line-strong: light-dark(#c3c3cc, #41414d);
+
+  /* Text */
+  --co-ink: light-dark(#151520, #eeeef2);
+  --co-ink-2: light-dark(#464652, #c3c3cc);
+  --co-muted: light-dark(#62626d, #9a9aa5);
+
+  /* The downbeat: action, focus, selection, the mark's centre */
+  --co-accent: light-dark(#6a44da, #aa99ff);
+  --co-accent-strong: light-dark(#5732bb, #c3b8ff);
+  --co-accent-soft: light-dark(#edecff, #262041);
+  --co-on-accent: light-dark(#fbfbff, #0f0d1c);
+
+  /* Status, each with a soft background */
+  --co-ok: light-dark(#0b7643, #72d699);
+  --co-ok-soft: light-dark(#dff8e6, #102a1a);
+  --co-warn: light-dark(#935a11, #f5bc69);
+  --co-warn-soft: light-dark(#ffefd1, #34220b);
+  --co-bad: light-dark(#b02a2d, #f58b84);
+  --co-bad-soft: light-dark(#ffe9e6, #3b1c1a);
+  --co-info: light-dark(#0065b4, #79b6f4);
+  --co-info-soft: light-dark(#e4f2ff, #0f253b);
+
+  /* Depth: offset and soft blur, never a hard or glowing edge */
+  --co-shadow-color: light-dark(rgb(21 21 32 / 0.1), rgb(0 0 0 / 0.55));
+  --co-shadow-1: 0 1px 2px var(--co-shadow-color), 0 4px 12px -6px var(--co-shadow-color);
+  --co-shadow-2: 0 2px 4px var(--co-shadow-color), 0 18px 40px -16px var(--co-shadow-color);
+  --co-focus-ring: 0 0 0 2px var(--co-bg), 0 0 0 4px var(--co-accent);
+
+  /* Type */
+  --co-font-sans: "Plus Jakarta Sans", "Plus Jakarta Sans Fallback", ui-sans-serif, system-ui, sans-serif;
+  --co-font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --co-text-xs: 0.8125rem;
+  --co-text-sm: 0.875rem;
+  --co-text-base: 1rem;
+  --co-text-md: 1.125rem;
+  --co-text-lg: 1.375rem;
+  --co-text-xl: clamp(1.625rem, 1.3rem + 1vw, 2rem);
+  --co-text-2xl: clamp(2rem, 1.4rem + 2.2vw, 3rem);
+  --co-text-display: clamp(2.75rem, 1.6rem + 4.6vw, 5.25rem);
+  --co-weight-body: 400;
+  --co-weight-medium: 500;
+  --co-weight-strong: 650;
+  --co-weight-display: 680;
+  --co-leading-display: 1.04;
+  --co-leading-heading: 1.15;
+  --co-leading-body: 1.6;
+  --co-tracking-display: -0.035em;
+  --co-tracking-heading: -0.02em;
+  --co-measure: 68ch;
+
+  /* Radii */
+  --co-radius-sm: 6px;
+  --co-radius-md: 10px;
+  --co-radius-lg: 16px;
+  --co-radius-xl: 24px;
+  --co-radius-pill: 999px;
+
+  /* Motion: arrive slow and soft, leave quick */
+  --co-dur-instant: 120ms;
+  --co-dur-quick: 200ms;
+  --co-dur-base: 320ms;
+  --co-dur-page: 440ms;
+  --co-dur-reveal: 760ms;
+  --co-dur-sequence: 1200ms;
+  --co-ease-arrive: cubic-bezier(0.16, 1, 0.3, 1);
+  --co-ease-move: cubic-bezier(0.65, 0, 0.35, 1);
+  --co-ease-leave: cubic-bezier(0.5, 0, 0.75, 0);
+  --co-stagger: 70ms;
+  --co-rise: 12px;
+  --co-reveal-blur: 8px;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* Reduced motion: no travel, no blur, short fades; state changes stay visible */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --co-dur-page: 160ms;
+    --co-dur-reveal: 200ms;
+    --co-dur-sequence: 0ms;
+    --co-stagger: 0ms;
+    --co-rise: 0px;
+    --co-reveal-blur: 0px;
+  }
+}

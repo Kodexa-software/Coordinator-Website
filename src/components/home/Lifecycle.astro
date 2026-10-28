@@ -1,0 +1,152 @@
+---
+// Install, update, remove: the three commands, each with its docs page.
+import CopyCommand from './CopyCommand.astro';
+import { INSTALL, REMOVE, UPDATE } from './commands';
+
+const rows = [
+  {
+    title: 'Install',
+    note: 'In a terminal. Needs Claude Code, Python 3.9+ and git.',
+    command: INSTALL,
+    label: 'the install command',
+    href: '/docs/install/',
+    link: 'Install',
+  },
+  {
+    title: 'Update',
+    note: 'In Claude Code, then start a new session. In a terminal: <code>coord update</code>.',
+    command: UPDATE,
+    label: 'the update command',
+    href: '/docs/update/',
+    link: 'Update',
+  },
+  {
+    title: 'Remove',
+    note: 'In a terminal. End any active run with <code>coord terminate</code> first.',
+    command: REMOVE,
+    label: 'the remove command',
+    href: '/docs/uninstall/',
+    link: 'Uninstall',
+  },
+];
+---
+
+<section class="lifecycle" aria-labelledby="lifecycle-title">
+  <div class="inner">
+    <h2 id="lifecycle-title" data-reveal="fade">Install, update, remove</h2>
+    <ul>
+      {
+        rows.map((row, i) => (
+          <li data-reveal="rise" style={`--i:${i}`}>
+            <div class="label">
+              <h3>{row.title}</h3>
+              <p set:html={row.note} />
+            </div>
+            <CopyCommand command={row.command} label={row.label} />
+            <a class="doc" href={row.href}>
+              {row.link} docs
+              <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <path d="M4 10h11m-4-4 4 4-4 4" />
+              </svg>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .inner {
+    box-sizing: border-box;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: clamp(4rem, 8vw, 7.5rem) 1.5rem clamp(2rem, 4vw, 3rem);
+  }
+  h2 {
+    margin: 0 0 2rem;
+    font-size: var(--co-text-2xl);
+    font-weight: var(--co-weight-display);
+    line-height: var(--co-leading-heading);
+    letter-spacing: var(--co-tracking-heading);
+  }
+  ul {
+    display: grid;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    display: grid;
+    gap: 0.75rem;
+  }
+  h3 {
+    margin: 0 0 0.125rem;
+    font-size: var(--co-text-lg);
+    font-weight: var(--co-weight-strong);
+    line-height: var(--co-leading-heading);
+  }
+  .label p {
+    margin: 0;
+    color: var(--co-muted);
+    font-size: var(--co-text-sm);
+  }
+  .label p :global(code) {
+    font-family: var(--co-font-mono);
+    font-size: 0.9em;
+    color: var(--co-ink-2);
+  }
+  .doc {
+    display: inline-flex;
+    margin-inline: -0.375rem;
+    padding-inline: 0.375rem;
+    align-items: center;
+    justify-self: start;
+    gap: 0.375rem;
+    min-height: 2.75rem;
+    border-radius: var(--co-radius-sm);
+    color: var(--co-ink-2);
+    font-size: var(--co-text-sm);
+    font-weight: var(--co-weight-medium);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color var(--co-dur-quick) var(--co-ease-arrive);
+  }
+  .doc:hover {
+    color: var(--co-accent-strong);
+  }
+  .doc svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform var(--co-dur-base) var(--co-ease-arrive);
+  }
+  @media (hover: hover) {
+    .doc:hover svg {
+      transform: translateX(3px);
+    }
+  }
+  .doc:focus-visible svg {
+    transform: translateX(3px);
+  }
+  @media (min-width: 56rem) {
+    ul {
+      gap: 0;
+    }
+    li {
+      grid-template-columns: 15rem minmax(0, 1fr) 9rem;
+      align-items: center;
+      gap: 2.5rem;
+      padding-block: 1.5rem;
+      border-block-start: 1px solid var(--co-line);
+    }
+    .doc {
+      justify-self: end;
+    }
+  }
+</style>

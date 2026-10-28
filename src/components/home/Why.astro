@@ -1,0 +1,82 @@
+---
+// Why Coordinator: four points, each from the Coordinator README.
+const points = [
+  {
+    title: 'Scope stays yours.',
+    text: 'Invented requirements, oversized answers and padded tasks are caught before you see the plan.',
+  },
+  {
+    title: 'The conductor never plays.',
+    text: 'Scheduling, merging, the gate and the live page are plain code and cost no tokens.',
+  },
+  {
+    title: 'Watch it land.',
+    text: 'A live local page shows every task move. You approve plans and answer questions there too.',
+  },
+  {
+    title: 'Pick it up weeks later.',
+    text: 'The plan and every brief stay in your project, so you can pause, resume or build a saved plan later.',
+  },
+];
+---
+
+<section class="why" aria-labelledby="why-title">
+  <div class="inner">
+    <h2 id="why-title" data-reveal="fade">Why Coordinator</h2>
+    <ul>
+      {
+        points.map((point, i) => (
+          <li data-reveal="rise" style={`--i:${i}`}>
+            <h3>{point.title}</h3>
+            <p>{point.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .inner {
+    box-sizing: border-box;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding: clamp(4rem, 8vw, 7.5rem) 1.5rem;
+  }
+  h2 {
+    margin: 0 0 2.5rem;
+    font-size: var(--co-text-2xl);
+    font-weight: var(--co-weight-display);
+    line-height: var(--co-leading-heading);
+    letter-spacing: var(--co-tracking-heading);
+  }
+  ul {
+    display: grid;
+    gap: 2.5rem 3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li {
+    padding-block-start: 1.25rem;
+    border-block-start: 1px solid var(--co-line);
+  }
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: var(--co-text-xl);
+    font-weight: var(--co-weight-strong);
+    line-height: var(--co-leading-heading);
+    letter-spacing: var(--co-tracking-heading);
+  }
+  p {
+    margin: 0;
+    max-width: 30rem;
+    color: var(--co-ink-2);
+  }
+  @media (min-width: 44rem) {
+    ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3.5rem 4rem;
+    }
+  }
+</style>
