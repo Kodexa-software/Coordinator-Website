@@ -55,6 +55,8 @@ Add these under **Settings, Secrets and variables, Actions**:
 | `CLOUDFLARE_API_TOKEN` | An API token with **Workers Scripts: Edit** on the Kodexa account |
 | `CLOUDFLARE_ACCOUNT_ID` | The Kodexa Cloudflare account ID |
 
+Without both secrets the workflow still builds, but skips the deploy and leaves a warning naming what is missing.
+
 Never commit either one.
 
 ### Manual fallback

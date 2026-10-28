@@ -48,8 +48,26 @@ jobs:
         if: steps.check.outputs.skip != 'true'
         run: npm run build
 
-      - name: Deploy
+      - name: Check Cloudflare secrets
+        id: secrets
         if: steps.check.outputs.skip != 'true'
+        run: |
+          missing=""
+          [ -n "$CLOUDFLARE_API_TOKEN" ] || missing="$missing CLOUDFLARE_API_TOKEN"
+          [ -n "$CLOUDFLARE_ACCOUNT_ID" ] || missing="$missing CLOUDFLARE_ACCOUNT_ID"
+          if [ -n "$missing" ]; then
+            msg="Deploy skipped, missing repo secret(s):$missing. Add them under Settings, Secrets and variables, Actions, then re-run Deploy."
+            echo "::warning::$msg"
+            echo "### Deploy skipped" >> "$GITHUB_STEP_SUMMARY"
+            echo "$msg" >> "$GITHUB_STEP_SUMMARY"
+            echo "missing=true" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Deploy
+        if: steps.check.outputs.skip != 'true' && steps.secrets.outputs.missing != 'true'
         run: npx wrangler@4 deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
