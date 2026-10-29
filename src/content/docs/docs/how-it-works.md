@@ -14,7 +14,7 @@ sidebar:
    it holds up; after three rounds, it asks you.
 3. **Approve.** You approve the plan on the live page or in chat, or say what to change. This is the one stop in
    the run. Asks that belong to another repo become follow-up runs, started in that repo when you approve. The
-   draft pull request opens then too, with a status line and a task table updated as tasks change.
+   draft pull request opens then too.
 4. **Build in parallel.** Tasks that don't depend on each other and don't share files run at the same time, each in
    its own worktree. Each builder runs its own reviewer and fixes what it finds.
 5. **Audit and merge.** The officer checks each finished task against the plan and your words, without reading the
@@ -71,7 +71,7 @@ waiting on you is in one list at the top, and the Full auto switch sits in the t
 
 The Files tab lists every file in the run's folder and in each task's folder: notes, reports, screenshots and
 whatever else the agents leave, with images as thumbnails. A click opens the viewer; video, audio, PDFs and HTML pages
-open in their own browser tab. Every file can also open in a new tab or show in Finder. Notes and reports link the
+open in their own browser tab. Every file can also open in a new tab or show in Finder (Explorer on Windows). Notes and reports link the
 files they name, and show the images they embed.
 
 With several pull requests, the header lists them all. When every run has finished, the page asks to merge all with
