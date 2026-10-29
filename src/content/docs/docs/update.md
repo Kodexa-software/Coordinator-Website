@@ -17,7 +17,8 @@ Or, in a terminal:
 coord update
 ```
 
-Then start a new Claude Code session to load the new version.
+Then start a new Claude Code session to load the new version. The links point into the clone, so an update is a
+`git pull` there; `coord update` also re-runs the installer, which refreshes them.
 
 ## Plugin install
 

@@ -18,6 +18,14 @@ rm -rf ~/.coordinator
 
 If you installed with `COORD_BIN_DIR`, remove `$COORD_BIN_DIR/coord` instead of `~/.local/bin/coord`.
 
+On Windows, in PowerShell (removing the junction leaves the clone it points to alone):
+
+```powershell
+Remove-Item ~\.local\bin\coord, ~\.local\bin\coord.cmd
+(Get-Item ~\.claude\skills\coordinate).Delete()
+Remove-Item -Recurse -Force ~\.coordinator
+```
+
 ## Plugin install
 
 ```sh
