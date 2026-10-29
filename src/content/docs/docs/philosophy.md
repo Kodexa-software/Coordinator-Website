@@ -30,6 +30,13 @@ on, lets your `/coordinate` session decide for you while you're away.
 Tests are off by default, and a hook blocks builders from touching test files. When you ask for tests, the reviewer
 and the officer check they are few, short and relevant.
 
+## Senior engineers, almost no comments
+
+Every agent works like a senior engineer: it understands the code before changing or judging it, follows your
+project's patterns, makes its own calls, owns the result and writes tight. Its code needs no comments. A comment
+appears only where a senior engineer would add one, as a short line on a non-obvious why, and the reviewer flags
+anything more. If your project's instructions ask for a comment style, they win.
+
 ## Your project's rules first
 
 Every agent loads the instruction files your own Claude Code session would: `CLAUDE.md`, `AGENTS.md`, those of
