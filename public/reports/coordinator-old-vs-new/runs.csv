@@ -1,0 +1,15 @@
+started,run,repo,pr,state,agents,tokens,cost_index,wall_h,busy_at_once,officer_plan_rounds,officer_task_audits,added,deleted
+2026-10-27T05:50,paint-thickness (0.1),ADP,19,Closed,64,376987263,243.1,22.98,1.14,,,4102,310
+2026-10-27T07:39,service-history (0.1),ADP,18,Closed,40,212003409,141.2,11.06,1.1,,,2714,614
+2026-10-28T12:59,website-docs-rebuild,Coordinator-Website,1,Merged,28,37821132,40.1,1.4,1.45,10,6,7921,549
+2026-10-28T14:27,skill-brain-update,Coordinator,1,Merged,33,65135266,65.6,2.27,1.4,6,12,2031,520
+2026-10-28T14:36,ci-deploy-fix,Coordinator-Website,2,Merged,6,2341838,3.1,0.23,1.14,2,2,21,1
+2026-10-28T16:49,docs-new-features,Coordinator-Website,3,Merged,4,2870647,3.4,0.1,1.13,1,1,19,6
+2026-10-28T16:58,multi-pr-merge,Coordinator,2,Merged,22,26546780,29.0,1.11,1.68,6,7,410,27
+2026-10-28T18:08,docs-merge-briefer,Coordinator-Website,4,Merged,4,2760869,3.5,0.1,1.19,1,1,18,5
+2026-10-28T18:22,terminate-cleanup,Coordinator,3,Merged,7,6076007,7.2,0.34,1.16,2,2,74,18
+2026-10-28T18:35,terminate-cleanup-coordinator-website,Coordinator-Website,5,Merged,5,1864205,2.5,0.1,1.28,2,1,5,6
+2026-10-28T18:55,coordinator-showcase-video,kodexa-video-studio,1,Merged,19,59639766,56.3,1.68,1.66,2,8,2817,33
+2026-10-28T19:09,coordinator-showcase-video-coordinator-w,Coordinator-Website,6,Merged,6,5884934,6.2,1.55,1.05,1,2,92,0
+2026-10-29T07:05,fix-paint-thickness-pr,ADP,22,Merged,29,178321737,134.4,8.65,1.17,6,9,3791,329
+2026-10-29T07:06,service-history-redesign,ADP,21,Merged,22,84900591,69.3,4.32,1.35,6,8,1994,199

@@ -1,0 +1,5 @@
+component,version,pr,state,added,deleted,tokens,cost_index,wall_h,idle_h,agent_h,agents,busy_at_once,owner_messages,status_polls,compactions,agents_killed,Lead / driver session (min),Planning & leading (min),Officer audits (min),Building (min),Code review (min),"Screenshots, perf & reports (min)",Rework & fixes (min),Lead / driver session (cost),Planning & leading (cost),Officer audits (cost),Building (cost),Code review (cost),"Screenshots, perf & reports (cost)",Rework & fixes (cost)
+Paint thickness,0.1,19,Closed,4102,310,376987263,243.1,22.98,9.38,15.58,64,1.14,40,17,1,3,309,163,0,301,14,357,100,48.7,47.3,0.0,78.7,6.5,45.6,16.2
+Paint thickness,0.9 full auto,22,Merged,3791,329,184928018,139.0,8.65,2.97,7.23,29,1.17,4,0,0,0,35,38,18,281,35,0,27,4.7,19.3,10.6,81.9,19.2,0.0,3.4
+Service history,0.1,18,Closed,2714,614,212003409,141.2,11.06,2.96,8.91,40,1.1,23,14,2,1,194,71,0,188,19,159,98,20.8,21.3,0.0,46.1,11.4,16.6,25.0
+Service history,0.9 full auto,21,Merged,1994,199,88584535,72.0,4.32,1.62,4.51,22,1.35,4,0,0,0,51,22,16,164,17,0,0,2.7,11.8,8.9,39.4,9.3,0.0,0.0
