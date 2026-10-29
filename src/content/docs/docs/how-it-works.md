@@ -5,7 +5,7 @@ sidebar:
   order: 5
 ---
 
-## A run in five steps
+## A run in six steps
 
 1. **Plan.** The planner reads the code your request touches, not the whole repo. It writes `plan.md` and one
    brief per task: dependencies, the files it may change, its size, and the model and effort it needs.
@@ -19,7 +19,10 @@ sidebar:
    its own worktree. Each builder runs its own reviewer and fixes what it finds.
 5. **Audit and merge.** The officer checks each finished task against the plan and your words, without reading the
    code. The scheduler commits, merges into the run branch, runs your gate and pushes. A conflict or a failing gate
-   becomes a small fix task. The draft pull request shows your request, the plan and every task.
+   becomes a small fix task. While work goes on, the draft pull request shows the goal and what has merged.
+6. **Describe.** Once every task has merged, a writer reads the plan, each task's notes and the diff, and writes the
+   pull request's description the way a senior engineer would: what changed and why, the decisions a reviewer
+   might question, how to test it, and real risks.
 
 Merging into your base branch is yours. When you're done reviewing, approve merge all on the live page or in chat:
 the pull requests merge in order, then every run ends. The branches with the pull requests are kept; each run's folder in `.coordinator/` is removed.
@@ -50,6 +53,7 @@ full auto too. Switch it on or off at any time, on the live page or with `/coord
 | Screenshot taker | Takes before/after screenshots on request |
 | Mapper | Builds or refreshes the project map |
 | Briefer | Reads big content on a smaller model and writes a short brief, with citations, for the agent that asked |
+| Pull request writer | Describes the finished change in the pull request, for its reviewers |
 | Scheduler | Plain code, not an agent: schedules, commits, merges, runs the gate, pushes |
 
 Each agent runs as its own background Claude Code session, except the reviewer and the briefer,

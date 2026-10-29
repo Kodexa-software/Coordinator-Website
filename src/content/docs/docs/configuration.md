@@ -15,13 +15,13 @@ run if you haven't.
 | `setup` | `""` | What a fresh worktree needs first, for example linking dependencies from `$COORD_MAIN` |
 | `dev` | `{"command": "", "cwd": ".", "ready_path": "/"}` | Dev server for screenshots; `{port}` is replaced with a free port |
 | `max_parallel` | `3` | Builders at once |
-| `models` / `efforts` | Opus, high | Per role: `planner`, `builder`, `reviewer`, `officer`, `shooter`, `mapper`, `briefer` (Sonnet, low). The planner can set them per task |
+| `models` / `efforts` | Opus, high | Per role: `planner`, `builder`, `reviewer`, `officer`, `shooter`, `mapper`, `briefer` (Sonnet, low), `writer` (Sonnet, medium). The planner can set them per task |
 | `officer` | `{"plan": true, "tasks": true, "max_rounds": 3}` | Where the officer checks, and how many rounds before it asks you |
 | `permission_mode` | `"auto"` | Permission mode for background agents |
 | `deny` | push, commit, rebase, `reset --hard`, `gh pr`, publish, `sudo`, ... | Commands agents may never run |
 | `test_names` / `test_dirs` | common test file and folder patterns | What counts as a test file for the tests guard |
 | `gitignore` | `true` | Add `.coordinator/` to the project's `.gitignore` when it isn't there |
-| `push` / `pr` | `true` | Push the run branch after every merged task. The draft PR opens when you approve the plan, with a status body kept up to date |
+| `push` / `pr` | `true` | Push the run branch after every merged task. The draft PR opens when you approve the plan, shows progress while the run works, and gets a written description once every task has merged |
 | `base_branch` | the current branch | What the run branch starts from |
 
 ## Where things live
