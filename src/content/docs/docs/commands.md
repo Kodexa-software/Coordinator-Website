@@ -11,17 +11,27 @@ Start a run in Claude Code:
 /coordinate Add CSV export to the orders table, with the same columns the table shows.
 ```
 
-The live page opens and Coordinator tells you when the plan is ready. After that:
+The live page opens and Coordinator tells you when the plan is ready. To be away for the whole run, begin the request
+with `<full auto>` and the `/coordinate` session decides for you, merges and ends the run
+([full auto](/docs/how-it-works/#full-auto)):
+
+```text
+/coordinate <full auto> Add CSV export to the orders table, with the same columns the table shows.
+```
+
+After that:
 
 | You say | What happens |
 |---|---|
 | `/coordinate <request>` | Start a run |
+| `/coordinate <full auto> <request>` | Start a run in full auto: the `/coordinate` session decides for you, merges and ends it |
 | `/coordinate plan <goal>` | Plan only: goals, milestones and tasks, saved in the project for a later run |
 | `/coordinate status` | Open the live page; one line in chat, and what's waiting on you |
 | `/coordinate approve` | Approve the plan; building starts. On the live page you can answer per question |
 | `/coordinate answer T3 <text>` | Answer an agent's question |
 | `/coordinate tell T3 <text>` | Send a note to a running agent; it arrives at its next step |
 | `/coordinate add <text>` | Change the plan or add work; it goes back through the officer and you |
+| `/coordinate auto on` / `auto off` | Turn full auto on or off for the run and its follow-up runs. The live page's switch does the same |
 | `/coordinate pause` / `resume` | Agents write an exact next step and stop / pick up where they stopped |
 | `/coordinate run` | Build a plan-only run, today or weeks later |
 | `/coordinate shots [note]` | Before/after screenshots (base branch vs run branch) as one PNG, saved in the shots task's folder: `<project>/.coordinator/<run>/tasks/<id>/` |
@@ -35,4 +45,10 @@ The live page opens and Coordinator tells you when the plan is ready. After that
 
 Add `--run <name>` when the project has more than one coordinator.
 
-With the clone install, every command also works in a terminal as `coord <command>`, with no model involved.
+With the clone install, every command also works in a terminal as `coord <command>`, with no model involved. A few
+options are for the terminal only:
+
+| In a terminal | What happens |
+|---|---|
+| `coord wait [<run>]` | Wait, at no token cost, until the run needs you or ends. `--new` doesn't count what already waits on you |
+| `coord -C <repo> <command>` | Run a command for a run in another repo without `cd`, like `git -C`, for example a follow-up run's `status` |

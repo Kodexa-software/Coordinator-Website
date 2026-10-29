@@ -1,6 +1,6 @@
 ---
 title: How it works
-description: The run flow, the roles, the live page, design languages and the project map.
+description: The run flow, full auto, the roles, the live page, design languages and the project map.
 sidebar:
   order: 5
 ---
@@ -23,6 +23,21 @@ sidebar:
 
 Merging into your base branch is yours. When you're done reviewing, approve merge all on the live page or in chat:
 the pull requests merge in order, then every run ends. The branches with the pull requests are kept; each run's folder in `.coordinator/` is removed.
+
+## Full auto
+
+Off by default. Begin a request with `<full auto>`, or flip the Full auto switch on the live page, and you count as
+away. The `/coordinate` session takes your place:
+
+- it approves the plan, taking each question's default unless your words say otherwise;
+- it answers the agents' questions, and records anything only you can do as a manual step for later;
+- it settles officer stalemates, retries a stalled task once and restarts a stopped scheduler once;
+- when the run is done, it merges every pull request and ends every run.
+
+The agents work exactly as in any other run; only the `/coordinate` session decides, and it tells you in one line
+what it decided for you. Anything it can't settle waits for you, and then nothing is merged. Follow-up runs start in
+full auto too. Switch it on or off at any time, on the live page or with `/coordinate auto on` or `auto off`. Keep the
+`/coordinate` session open: it is the one deciding.
 
 ## The roles
 
@@ -48,7 +63,12 @@ questions there too. It runs on `127.0.0.1` only and costs nothing to keep open.
 
 Read each agent's conversation live, and open any file or image in a viewer. The plan shows its short version (the
 goal, the tasks, each question with its default), and you approve it with an answer per question. Everything
-waiting on you is in one list at the top.
+waiting on you is in one list at the top, and the Full auto switch sits in the top bar.
+
+The Files tab lists every file in the run's folder and in each task's folder: notes, reports, screenshots and
+whatever else the agents leave, with images as thumbnails. A click opens the viewer; video, audio, PDFs and HTML pages
+open in their own browser tab. Every file can also open in a new tab or show in Finder. Notes and reports link the
+files they name, and show the images they embed.
 
 With several pull requests, the header lists them all. When every run has finished, the page asks to merge all with
 one Approve, shows each merge as it goes, and offers Try again if one fails.
