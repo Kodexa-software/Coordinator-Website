@@ -21,8 +21,8 @@ sidebar:
    code. The scheduler commits, merges into the run branch, runs your gate and pushes. A conflict or a failing gate
    becomes a small fix task. While work goes on, the draft pull request shows the goal and what has merged.
 6. **Describe.** Once every task has merged, a writer reads the plan, each task's notes and the diff, and writes the
-   pull request's description the way a senior engineer would: a short paragraph on what the change does and why,
-   then the changes, grouped by area. Nothing else.
+   pull request's description the way a senior engineer would: one short paragraph, one to three lines, on what
+   the change does and why. Nothing else.
 
 Merging into your base branch is yours. When you're done reviewing, approve merge all on the live page or in chat:
 the pull requests merge in order, then every run ends. The branches with the pull requests are kept; each run's folder in `.coordinator/` is removed.
