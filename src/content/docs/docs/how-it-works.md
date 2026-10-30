@@ -1,25 +1,42 @@
 ---
 title: How it works
-description: The run flow, full auto, the roles, the live page, design languages and the project map.
+description: The three modes, the run flow, full auto, the roles, the live page, design languages and the project map.
 sidebar:
   order: 5
 ---
+
+## Three modes
+
+`/coordinate` picks the lightest mode that still guards the result, and says which in one line.
+
+- **Direct** is for one coherent change in a few files: a bug fix, a config or copy change, an endpoint. It is built
+  in your own session under the same scope rules, at the cost of a plain prompt. A fresh reviewer checks it only in
+  risky areas: authentication, permissions, money or stock, migrations, concurrency and security.
+- **Quick** (`coord start --quick`) runs the same kind of change in the background: one builder in its own worktree,
+  no planner, reviewed, merged and pushed.
+- **Run** is the planned team below. Use it for work with parts that can be built side by side, and for one feature
+  that spans several areas, such as site, app and API. Measured on such a feature, a planned run produced the
+  best-ranked diff for about half the cost of the previous version.
 
 ## A run in six steps
 
 1. **Plan.** The planner reads the code your request touches, not the whole repo. It writes `plan.md` and one
    brief per task: dependencies, the files it may change, its size, and the model and effort it needs.
-2. **Audit.** The hallucination officer compares the plan with everything you have said. It looks for invented or
-   missed requirements, oversized answers, padded tasks and needlessly serial steps. It sends the plan back until
-   it holds up; after three rounds, it asks you.
+2. **Audit.** In full auto, or when the plan has more than three tasks, the hallucination officer compares the plan
+   with everything you have said, once. It looks for invented or missed requirements, oversized answers, padded
+   tasks and needlessly serial steps. A must-fix has to name the sentence, file or task it breaks.
 3. **Approve.** You approve the plan on the live page or in chat, or say what to change. This is the one stop in
    the run. Asks that belong to another repo become follow-up runs, started in that repo when you approve. The
    draft pull request opens then too.
 4. **Build in parallel.** Tasks that don't depend on each other and don't share files run at the same time, each in
-   its own worktree. Each builder runs its own reviewer and fixes what it finds.
-5. **Audit and merge.** The officer checks each finished task against the plan and your words, without reading the
-   code. The scheduler commits, merges into the run branch, runs your gate and pushes. A conflict or a failing gate
-   becomes a small fix task. While work goes on, the draft pull request shows the goal and what has merged.
+   its own worktree. Each builder runs the fast `check`, then its own reviewer, which checks that everything in the
+   diff traces to your words, and fixes what it finds. A question an agent asks carries a default, which applies by
+   itself after 10 minutes, so no question stalls the run.
+5. **Merge.** The scheduler commits, merges into the run branch and runs your full gate once per task, off its main
+   loop. A failed gate is re-run once before any fix starts; a fix agent gets the error lines, and each task gets at
+   most one fix. A failure the run didn't cause is recorded for you instead of looping. The base branch's new
+   commits merge into the run branch after each task, and the branch is pushed. While work goes on, the draft pull
+   request shows the goal and what has merged.
 6. **Describe.** Once every task has merged, a writer reads the plan, each task's notes and the diff, and writes the
    pull request's description the way a senior engineer would: one short paragraph, one to three lines, on what
    the change does and why. Nothing else.
@@ -34,7 +51,7 @@ away. The `/coordinate` session takes your place:
 
 - it approves the plan, taking each question's default unless your words say otherwise;
 - it answers the agents' questions, and records anything only you can do as a manual step for later;
-- it settles officer stalemates, retries a stalled task once and restarts a stopped scheduler once;
+- it settles stalemates, retries a stalled task once and restarts a stopped scheduler once;
 - when the run is done, it merges every pull request and ends every run.
 
 The agents work exactly as in any other run; only the `/coordinate` session decides, and it tells you in one line
@@ -47,23 +64,24 @@ full auto too. Switch it on or off at any time, on the live page or with `/coord
 | Role | Does |
 |---|---|
 | Planner | Splits the request into small tasks. Never writes product code |
-| Hallucination officer | Checks the plan, then each finished task, against your words. Never reads code |
+| Hallucination officer | Checks the plan once against your words, in full auto or for plans of more than three tasks |
 | Builder | Builds one task in its own worktree |
 | Reviewer | Reviews one task's change with fresh eyes |
 | Screenshot taker | Takes before/after screenshots on request |
 | Mapper | Builds or refreshes the project map |
 | Briefer | Reads big content on a smaller model and writes a short brief, with citations, for the agent that asked |
 | Pull request writer | Describes the finished change in the pull request, for its reviewers |
-| Scheduler | Plain code, not an agent: schedules, commits, merges, runs the gate, pushes |
+| Scheduler | Plain code, not an agent: schedules, commits, merges, runs the gate, pushes. It adopts running agents after a restart, stops agents that make no progress for 30 minutes, and nudges builders past their time box |
 
 Each agent runs as its own background Claude Code session, except the reviewer and the briefer,
 which the agent that needs them starts.
 
 ## The live page
 
-A small local page shows each task moving from queued to working, through the officer's check, to done. It also
-holds the plan, the officer's reports, and each task's brief, changes and review. You approve plans and answer
-questions there too. It runs on `127.0.0.1` only and costs nothing to keep open.
+A small local page shows each task moving from queued to working, through review, to done, with the run's cost so
+far. It also holds the plan with its shape and any other open runs touching the same files, the officer's report,
+and each task's brief, changes and review. You approve plans, answer questions and send messages there too. It
+runs on `127.0.0.1` only and costs nothing to keep open.
 
 Read each agent's conversation live, and open any file or image in a viewer. The plan shows its short version (the
 goal, the tasks, each question with its default), and you approve it with an answer per question. Everything

@@ -5,10 +5,19 @@ sidebar:
   order: 1
 ---
 
-Coordinator turns one `/coordinate` request into a small team of Claude Code agents that work in the background.
-A planner splits the work, a hallucination officer checks the plan against your words, and you approve it once.
-Builders then work in parallel, each in its own git worktree, and every task is reviewed and checked before it is
-merged.
+Coordinator gets one `/coordinate` request done with the least ceremony that still guards the result. It picks
+one of three modes and says which:
+
+- **direct**: a small single change is built in your own session under Coordinator's scope rules, at the cost of a
+  plain prompt. A fresh reviewer checks it when it touches a risky area: auth, money, migrations or security.
+- **quick**: the same change in the background. One builder works in its own worktree, and its change is reviewed,
+  merged and pushed while you keep working.
+- **run**: work with parts that can be built side by side, or a feature across several areas such as site, app and
+  API. A planner splits it, you approve the plan once, and builders work in parallel, each in its own git worktree
+  and reviewed before it is merged. In full auto, or for plans of more than three tasks, a hallucination officer
+  checks the plan against your words first.
+
+You can name the mode yourself: `/coordinate quick <request>`.
 
 You need Claude Code, Python 3.9+, git and a git project to run it in.
 

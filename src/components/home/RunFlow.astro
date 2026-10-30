@@ -8,7 +8,7 @@ const steps = [
   {
     kind: 'officer',
     title: 'Hallucination officer',
-    text: 'Checks the plan against your exact words and sends it back until it holds up.',
+    text: 'For big plans or full auto, checks the plan once against your exact words.',
   },
   { kind: 'approve', title: 'Your one approval', text: 'You read the plan and approve it. It’s the one stop in the run.' },
   {
@@ -18,13 +18,13 @@ const steps = [
   },
   {
     kind: 'checks',
-    title: 'Reviewer, then officer',
-    text: 'Each task is reviewed, then checked again against the plan and your words.',
+    title: 'Reviewer per task',
+    text: 'Each task is reviewed with fresh eyes, and every line must trace to your words.',
   },
   {
     kind: 'branch',
     title: 'Run branch and draft PR',
-    text: 'Merged into <code>coord/&lt;run&gt;</code>, gated and pushed. Once it’s all in, the PR is described like a senior engineer would.',
+    text: 'Merged into <code>coord/&lt;run&gt;</code>, gated once and pushed. Once it’s all in, the PR is described like a senior engineer would.',
   },
 ];
 const lanes = ['1rem', '2.75rem', '4.5rem'];
